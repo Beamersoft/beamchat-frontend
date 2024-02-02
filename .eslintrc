@@ -1,0 +1,65 @@
+{
+  "extends": "airbnb",
+  "parser": "@babel/eslint-parser",
+  "plugins": [
+    "react-hooks",
+		"jest"
+  ],
+  "rules": {
+		"react/react-in-jsx-scope": "off",
+		"react/jsx-curly-brace-presence": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "max-len": [
+      "error",
+      { "code": 200, "comments": 200 }
+    ],
+    "no-unused-expressions": "off",
+    "react/prefer-es6-class": ["error", "always"],
+    "react/jsx-filename-extension": [
+      "error",
+      { "extensions": [".js", ".jsx"] }
+    ],
+    "indent": [
+      "error", "tab"
+    ],
+	"react/jsx-indent": ["error", "tab"],
+	"react/style-prop-object": ["error", { "allow": ["StatusBar"] }],
+	"no-tabs": ["error", { "allowIndentationTabs": true }],
+    "operator-linebreak": ["error", "after"],
+    "no-underscore-dangle": ["error", { "allow": ["_data", "_id", "__LOCAL__", "__DEV__"] }],
+    "import/named": 2,
+    "import/no-cycle": 2,
+    "react/prop-types": 0,
+    "no-console": ["error", { "allow": ["warn", "error", "info"] }],
+    "import/prefer-default-export": 2,
+    "camelcase": 2,
+    "react/jsx-props-no-spreading": "off",
+		"react/jsx-indent-props": ["error", "tab"]
+  },
+  "env": {
+    "browser": true,
+    "node": false,
+		"jest": true
+  },
+   "parserOptions": {
+    "ecmaVersion": 2020,
+    "requireConfigFile": false,
+    "babelOptions": {
+       "presets": ["@babel/preset-react"]
+    }
+  },
+  "globals": {
+    "__DEV__": true,
+    "FormData": true,
+    "fetch": true,
+		"test": true,
+    "Headers": true,
+    "Request": true,
+    "XMLHttpRequest": true,
+    "File": true,
+		"module": true,
+		"process": true,
+		"arguments": true
+  }
+}

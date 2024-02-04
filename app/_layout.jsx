@@ -1,6 +1,7 @@
+/* eslint-disable import/no-extraneous-dependencies */
+import 'react-native-get-random-values';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
-	DarkTheme,
 	DefaultTheme,
 	ThemeProvider,
 } from '@react-navigation/native';
@@ -8,7 +9,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import { useColorScheme } from 'react-native';
+import AuthProviderContext from '../src/providers/AuthProvider';
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -43,21 +44,21 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-	const colorScheme = useColorScheme();
-
 	return (
-		<ThemeProvider value={DefaultTheme}>
-			<Stack
-				screenOptions={{
-					headerStyle: {
-						backgroundColor: '#f4511e',
-					},
-					headerTintColor: '#fff',
-					headerTitleStyle: {
-						fontWeight: 'bold',
-					},
-				}}
-			/>
-		</ThemeProvider>
+		<AuthProviderContext>
+			<ThemeProvider value={DefaultTheme}>
+				<Stack
+					screenOptions={{
+						headerStyle: {
+							backgroundColor: '#f4511e',
+						},
+						headerTintColor: '#fff',
+						headerTitleStyle: {
+							fontWeight: 'bold',
+						},
+					}}
+				/>
+			</ThemeProvider>
+		</AuthProviderContext>
 	);
 }

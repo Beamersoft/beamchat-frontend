@@ -8,18 +8,18 @@ import Colors from '../../themes/colors';
 const style = ({
 	error,
 	highlite,
-	password,
 }) => StyleSheet.create({
 	container: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		backgroundColor: highlite ? Colors.primary.blue10 : 'transparent',
+		marginHorizontal: Platform.OS === 'web' ? 20 : 0,
 	},
 	maxContainer: {
 		marginRight: 10,
 	},
 	text: {
-		width: password ? '90%' : '98%',
+		width: '90%',
 		fontSize: 20,
 		fontWeight: '400',
 		paddingVertical: 10,

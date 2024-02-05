@@ -1,17 +1,13 @@
 import {
-	Link,
+	Link, Stack,
 } from 'expo-router';
 import { useContext, useEffect } from 'react';
-import {
-	Text,
-	TextInput,
-	View,
-} from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import AuthContext from '../src/providers/AuthContext';
 import Screen from '../src/components/Screen';
 import InputText from '../src/components/InputText';
+import ButtonComponent from '../src/components/Button';
 
 export default function Login() {
 	const { t } = useTranslation();
@@ -25,22 +21,25 @@ export default function Login() {
 
 	return (
 		<Screen>
-			<View style={{
-				alignItems: 'center',
-				justifyContent: 'center',
-				alignContent: 'center',
-			}}
-			>
-				{/* <Text>Login Screen</Text>
-				<Link href={{ pathname: 'details', params: { name: 'Bacon' } }}>Go to Details</Link> */}
-				<InputText
-					placeholder={`${t('EMAIL')}`}
-				/>
-				<InputText
-					password
-					placeholder={`${t('PASSWORD')}`}
-				/>
-			</View>
+			<Stack.Screen
+				options={{
+					title: 'Login',
+					headerTitleStyle: {
+						fontWeight: 'bold',
+					},
+					headerTitle: 'Login',
+				}}
+			/>
+			<InputText
+				placeholder={`${t('EMAIL')}`}
+			/>
+			<InputText
+				password
+				placeholder={`${t('PASSWORD')}`}
+			/>
+			<ButtonComponent
+				label={`${t('CONTINUE')}`}
+			/>
 		</Screen>
 	);
 }

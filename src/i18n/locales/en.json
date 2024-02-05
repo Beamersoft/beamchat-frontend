@@ -2,6 +2,7 @@
 	"translation": {
 		"appName": "Beamchat",
 		"PASSWORD": "Password",
-		"EMAIL": "Email"
+		"EMAIL": "Email",
+		"CONTINUE": "Continue"
 	}
 }

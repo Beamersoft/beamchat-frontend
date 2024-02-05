@@ -49,10 +49,6 @@ function RootLayoutNav() {
 			<ThemeProvider value={DefaultTheme}>
 				<Stack
 					screenOptions={{
-						headerStyle: {
-							backgroundColor: '#f4511e',
-						},
-						headerTintColor: '#fff',
 						headerTitleStyle: {
 							fontWeight: 'bold',
 						},

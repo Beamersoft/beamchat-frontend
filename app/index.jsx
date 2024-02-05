@@ -7,6 +7,7 @@ import {
 	View,
 } from 'react-native';
 import AuthContext from '../src/providers/AuthContext';
+import Screen from '../src/components/Screen';
 
 export default function Login() {
 	const context = useContext(AuthContext);
@@ -18,9 +19,11 @@ export default function Login() {
 	}, [deviceId]);
 
 	return (
-		<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-			<Text>Login Screen</Text>
-			<Link href={{ pathname: 'details', params: { name: 'Bacon' } }}>Go to Details</Link>
-		</View>
+		<Screen>
+			<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+				<Text>Login Screen</Text>
+				<Link href={{ pathname: 'details', params: { name: 'Bacon' } }}>Go to Details</Link>
+			</View>
+		</Screen>
 	);
 }

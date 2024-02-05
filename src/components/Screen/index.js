@@ -69,12 +69,6 @@ function Screen({
 				flex: 1,
 			}}
 		>
-			<StatusBar
-				translucent
-				StatusBarAnimation="fade"
-				style={statusBarStyle}
-				backgroundColor={statusBarColor}
-			/>
 			<NotNetwork />
 			<BackgroundImage backgroundHeight={backgroundHeight} backgroundImage={backgroundImage}>
 				{safe && (

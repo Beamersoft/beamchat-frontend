@@ -17,7 +17,7 @@ function NotNetwork() {
 	if (connected) return null;
 	return (
 		<View style={styles.container}>
-			<Text color="white10" center size="regular-14">Sin internet, por favor comprueba tu conexión</Text>
+			<Text color="white10" center size="regular-14">No internet, check your connection</Text>
 		</View>
 	);
 }

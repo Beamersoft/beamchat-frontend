@@ -5,9 +5,8 @@ import {
 const styles = StyleSheet.create({
 	container: {
 		width: '100%',
-		marginTop: 40,
 		height: 30,
-		backgroundColor: '#F44444',
+		backgroundColor: '#FF4444',
 		paddingTop: 4,
 	},
 });

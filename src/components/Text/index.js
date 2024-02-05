@@ -1,6 +1,5 @@
 import {
 	Text,
-	StyleSheet,
 } from 'react-native';
 
 import Colors from '../../helpers/colors';
@@ -32,9 +31,8 @@ function TextComponent({
 		}
 	}
 
-	const styles = StyleSheet.create(localStyle);
 	return (
-		<Text style={[styles, style]} {...rest} allowFontScaling={false} testID={testID}>
+		<Text style={[localStyle, style]} {...rest} allowFontScaling={false} testID={testID}>
 			{children}
 		</Text>
 	);

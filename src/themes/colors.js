@@ -1,60 +1,60 @@
 const Colors = {
 	primary: {
-		white10: '#ffffff',
-		gray100: '#313238',
-		gray90: '#394049',
-		gray80: '#616D7D',
-		gray70: '#7E8A99',
-		gray60: '#97A1AD',
-		gray50: '#ACB4BD',
-		gray40: '#BEC4CC',
-		gray30: '#CFD3D9',
-		gray20: '#DEE1E5',
-		gray10: '#ECEEF0',
-		gray0: '#F9F9FA',
-		gray00: '#F6F6F6',
-		white: '#FFFFFF',
-		blue40: '#3B1794',
-		blue30: '#6528FF',
-		blue20: '#E7DFFB',
-		blue10: '#F4F0FF',
-		purple50: '#651EA6',
-		purple40: '#B80DBA',
-		purple30: '#E454E7',
-		purple20: '#F1A0F2',
-		purple10: '#F9EDFA',
-		error: '#F44444',
-		success: '#2EC759',
-		bitcoin: '#FC9512',
+		white10: '#F0F0F0', // Light gray for backgrounds
+		gray100: '#333333', // Almost black for text
+		gray90: '#404040', // Dark gray for secondary text
+		gray80: '#606060', // Medium gray for tertiary text
+		gray70: '#707070', // Soft gray for borders
+		gray60: '#909090', // Light gray for inactive icons
+		gray50: '#A0A0A0', // Very light gray for separators
+		gray40: '#B0B0B0', // Even lighter gray for UI backgrounds
+		gray30: '#C0C0C0', // Placeholder texts
+		gray20: '#D0D0D0', // Disabled buttons
+		gray10: '#E0E0E0', // Hover states
+		gray0: '#EFEFEF', // Chat bubbles
+		gray00: '#F5F5F5', // Message input background
+		white: '#FFFFFF', // Pure white for text backgrounds
+		blue40: '#0038A8', // Classic MSN blue
+		blue30: '#0055FF', // Lighter MSN blue
+		blue20: '#99CCFF', // Very light blue for highlights
+		blue10: '#DDEEFF', // Softest blue for background highlights
+		purple50: '#3E3E7E', // Soft purple for accents
+		purple40: '#5E5EA8', // Medium purple for category headers
+		purple30: '#7E7EC8', // Lighter purple for icons
+		purple20: '#B8B8E8', // Soft purple for notifications
+		purple10: '#D0D0F0', // Very light purple for dialog backgrounds
+		error: '#FF4444', // Errors and warnings
+		success: '#33B679', // Success messages
+		bitcoin: '#F7931A', // Retaining the color for specific use cases
 		transparent: 'transparent',
-		statusBar: '#29035D',
+		statusBar: '#0055FF', // StatusBar color to match MSN blue
 	},
 	category: {
-		yellow40: '#947B0F',
-		yellow30: '#FED319',
-		yellow20: '#FFF9DB',
-		yellow10: '#FFFCF0',
-		green40: '#00945C',
-		green30: '#00D685',
-		green20: '#DAFBEF',
-		green10: '#F2FCF9',
-		acent240: '#B80DBA', // #720F94
-		acent230: '#AC17E0',
-		acent220: '#F4DFFB',
-		acent210: '#FBF3FE',
-		orange40: '#AE5718',
-		orange30: '#F7941A',
-		orange20: '#FEEFDD',
-		orange10: '#FFF8F0',
-		acent140: '#4702AE',
-		acent130: '#511ED2', // acent130
-		acent120: '#C2B0EF',
-		acent110: '#E8DFF7',
-		pink40: '#94246B',
-		pink30: '#FF3EB9',
-		pink20: '#FFDBF2',
-		pink10: '#FFF0F9',
-		darkblue10: '#F4F0FF',
+		yellow40: '#C7A600', // Dark yellow for warnings
+		yellow30: '#FFCC00', // Bright yellow for stars or important toggles
+		yellow20: '#FFF9CC', // Light yellow for highlights
+		yellow10: '#FFFCE6', // Softest yellow for background accents
+		green40: '#006633', // Classic MSN green
+		green30: '#00CC66', // Bright MSN green
+		green20: '#CCFFDD', // Soft green for success messages
+		green10: '#E6FFF2', // Very soft green for success backgrounds
+		acent240: '#B80DBA', // Retaining as a unique identifier
+		acent230: '#AC17E0', // Adjusted for clarity
+		acent220: '#F4DFFB', // Adjusted for theme consistency
+		acent210: '#FBF3FE', // Light purple for backgrounds
+		orange40: '#FF6600', // Bright orange for urgent actions
+		orange30: '#FF9933', // Soft orange for less urgent notifications
+		orange20: '#FFD1AA', // Light orange for background highlights
+		orange10: '#FFE6CC', // Very light orange for UI accents
+		acent140: '#4702AE', // Unique purple for distinction
+		acent130: '#511ED2', // Adjusted purple for visibility
+		acent120: '#C2B0EF', // Light purple for differentiation
+		acent110: '#E8DFF7', // Softest purple for subtle UI elements
+		pink40: '#FF0066', // Bright pink for fun accents
+		pink30: '#FF3399', // Soft pink for playful elements
+		pink20: '#FF99CC', // Light pink for highlights
+		pink10: '#FFE6F2', // Very light pink for background touches
+		darkblue10: '#DDEEFF', // Softest blue matching the primary scheme
 		transparent: 'transparent',
 	},
 };

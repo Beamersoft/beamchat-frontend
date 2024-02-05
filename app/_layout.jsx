@@ -1,6 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import { useEffect } from 'react';
 import 'react-native-get-random-values';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { I18nextProvider } from 'react-i18next';
 import {
 	DefaultTheme,
 	ThemeProvider,
@@ -8,7 +10,9 @@ import {
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+
+import i18n from '../src/i18n';
+
 import AuthProviderContext from '../src/providers/AuthProvider';
 
 export {
@@ -45,16 +49,18 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
 	return (
-		<AuthProviderContext>
-			<ThemeProvider value={DefaultTheme}>
-				<Stack
-					screenOptions={{
-						headerTitleStyle: {
-							fontWeight: 'bold',
-						},
-					}}
-				/>
-			</ThemeProvider>
-		</AuthProviderContext>
+		<I18nextProvider>
+			<AuthProviderContext>
+				<ThemeProvider value={DefaultTheme}>
+					<Stack
+						screenOptions={{
+							headerTitleStyle: {
+								fontWeight: 'bold',
+							},
+						}}
+					/>
+				</ThemeProvider>
+			</AuthProviderContext>
+		</I18nextProvider>
 	);
 }

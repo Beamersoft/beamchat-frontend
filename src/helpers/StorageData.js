@@ -38,6 +38,7 @@ export async function clearData(key = localKey) {
 export async function clearAllLocalStorage() {
 	try {
 		const keys = [
+			`@${sessionLocalKey}`,
 			'@userData',
 		];
 		await AsyncStorage.multiRemove(keys);

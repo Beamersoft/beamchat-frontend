@@ -3,7 +3,7 @@ import React, {
 	useEffect,
 } from 'react';
 
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { onlineManager } from 'react-query';
 import NetInfo from '@react-native-community/netinfo';
 
@@ -15,7 +15,6 @@ import {
 	storeData,
 	sessionLocalKey,
 	clearAllLocalStorage,
-	sessionIdTokenLocalKey,
 	sessionRefreshTokenLocalKey,
 } from '../helpers/StorageData';
 
@@ -81,8 +80,6 @@ function AppProviderContext({ children }) {
 			await getCurrentNetworkStatus();
 			const id = await generateDeviceId();
 			setDeviceId(id);
-
-			// TODO: Get user info from localstorage.
 			const localToken = await getData(sessionLocalKey);
 			if (localToken) {
 				const decoded = jwtDecode(localToken.jwt);
@@ -91,7 +88,7 @@ function AppProviderContext({ children }) {
 				} else {
 					const data = await getData('userData');
 					setLogged(true);
-					if (userData) setUserData(data);
+					if (data) setUserData(data);
 				}
 			}
 			setBoot(true);
@@ -155,9 +152,8 @@ function AppProviderContext({ children }) {
 				setLoading,
 				...networkStatus,
 				storeData,
-				setToken: async (accessToken, idToken, refreshUserToken) => {
+				setToken: async (accessToken, refreshUserToken) => {
 					await storeData({ jwt: accessToken }, sessionLocalKey);
-					await storeData({ jwt: idToken }, sessionIdTokenLocalKey);
 					await storeData({ jwt: refreshUserToken }, sessionRefreshTokenLocalKey);
 					await getLocalToken();
 				},

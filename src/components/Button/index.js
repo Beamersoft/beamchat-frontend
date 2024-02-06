@@ -11,7 +11,7 @@ import Text from '../Text';
 
 import styles from './styles';
 
-function ButtonComponent({
+function Button({
 	testID,
 	label,
 	background = 'blue30',
@@ -107,4 +107,4 @@ function ButtonComponent({
 		</TouchableOpacity>
 	);
 }
-export default ButtonComponent;
+export default Button;

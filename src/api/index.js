@@ -1,7 +1,6 @@
 import Constants from 'expo-constants';
 import axios from 'axios';
 import { Platform } from 'react-native';
-import { v4 as uuidv4 } from 'uuid';
 
 import {
 	sessionLocalKey,
@@ -11,7 +10,6 @@ import {
 } from '../helpers/StorageData';
 
 import CustomError from '../helpers/customerrors';
-import { track } from '../helpers/analytics';
 
 const config = {
 	ENDPOINT_URL: `${Constants.expoConfig.extra.API_URL}`,
@@ -22,7 +20,7 @@ const BASE_URL = config.ENDPOINT_URL;
 
 let total401 = 0;
 export default async function api(params, useIdToken = false, version = '1', saveLog = true) {
-	const requestUUID = uuidv4();
+	// const requestUUID = uuidv4();
 
 	const controller = new AbortController();
 	const localParams = { ...params.query };
@@ -63,34 +61,34 @@ export default async function api(params, useIdToken = false, version = '1', sav
 	if (params.data && Object.keys(params.data).length > 0) optionsAxios.data = params.data;
 
 	const instance = axios.create(optionsAxios);
-	const startTime = new Date();
+	// const startTime = new Date();
 	try {
 		if (saveLog) {
-			track('NETWORK_FETCH_INIT', {
-				requestUUID,
-				url: optionsAxios.url,
-				method: optionsAxios.method,
-				baseURL: optionsAxios.baseURL,
-				headers: optionsAxios.headers,
-				query: params.query,
-				body: { ...params.data, password: null, nip: null },
-				startTime,
-			}, 'analytics');
+			// track('NETWORK_FETCH_INIT', {
+			// 	requestUUID,
+			// 	url: optionsAxios.url,
+			// 	method: optionsAxios.method,
+			// 	baseURL: optionsAxios.baseURL,
+			// 	headers: optionsAxios.headers,
+			// 	query: params.query,
+			// 	body: { ...params.data, password: null, nip: null },
+			// 	startTime,
+			// }, 'analytics');
 		}
 
 		const response = await instance.request(optionsAxios);
-		const endTime = new Date();
+		// const endTime = new Date();
 		if (saveLog) {
-			track('NETWORK_FETCH_END', {
-				requestUUID,
-				response: response?.data,
-				url: optionsAxios.url,
-				method: optionsAxios.method,
-				baseURL: optionsAxios.baseURL,
-				status: response?.status,
-				endTime,
-				seconds: (endTime.getTime() - startTime.getTime()) / 1000,
-			}, 'analytics');
+			// track('NETWORK_FETCH_END', {
+			// 	requestUUID,
+			// 	response: response?.data,
+			// 	url: optionsAxios.url,
+			// 	method: optionsAxios.method,
+			// 	baseURL: optionsAxios.baseURL,
+			// 	status: response?.status,
+			// 	endTime,
+			// 	seconds: (endTime.getTime() - startTime.getTime()) / 1000,
+			// }, 'analytics');
 		}
 
 		if (response.data) {
@@ -120,15 +118,15 @@ export default async function api(params, useIdToken = false, version = '1', sav
 		}
 
 		if (saveLog) {
-			const endTime = new Date();
-			track('NETWORK_ERROR', {
-				requestUUID,
-				errorData,
-				url: optionsAxios.url,
-				method: optionsAxios.method,
-				baseURL: optionsAxios.baseURL,
-				seconds: (endTime.getTime() - startTime.getTime()) / 1000,
-			}, 'analytics');
+			// const endTime = new Date();
+			// track('NETWORK_ERROR', {
+			// 	requestUUID,
+			// 	errorData,
+			// 	url: optionsAxios.url,
+			// 	method: optionsAxios.method,
+			// 	baseURL: optionsAxios.baseURL,
+			// 	seconds: (endTime.getTime() - startTime.getTime()) / 1000,
+			// }, 'analytics');
 		}
 		throw new CustomError({
 			...errorData,

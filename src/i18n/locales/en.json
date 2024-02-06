@@ -2,7 +2,13 @@
 	"translation": {
 		"appName": "Beamchat",
 		"PASSWORD": "Password",
+		"REPEAT_PASSWORD": "Repeat password",
 		"EMAIL": "Email",
-		"CONTINUE": "Continue"
+		"CONTINUE": "Continue",
+		"FIRSTNAME": "Firstname",
+		"LASTNAME": "Lastname",
+		"USERNAME": "Username",
+		"REGISTER_HINT": "Don't you have an account? register!",
+		"LOGOUT": "Logout"
 	}
 }

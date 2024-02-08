@@ -18,6 +18,8 @@ import {
 	sessionRefreshTokenLocalKey,
 } from '../helpers/StorageData';
 
+import socket from '../api/socket';
+
 function AppProviderContext({ children }) {
 	const [logged, setLogged] = useState(false);
 	const [userData, setUserData] = useState();
@@ -28,6 +30,7 @@ function AppProviderContext({ children }) {
 		connected: false,
 		connectedType: null,
 	});
+	const [socketConnected, setSocketConnected] = useState(false);
 
 	async function logout() {
 		await clearAllLocalStorage();
@@ -61,13 +64,6 @@ function AppProviderContext({ children }) {
 					await logout();
 
 					// TODO: Implement logic for refresh token
-
-					// const refreshLocalToken = await getData(sessionRefreshTokenLocalKey);
-					// const newTokens = await refreshToken(refreshLocalToken.jwt);
-					// if (newTokens && newTokens.access_token && newTokens.id_token) {
-					// 	await storeData({ jwt: newTokens.access_token }, sessionLocalKey);
-					// 	await storeData({ jwt: newTokens.id_token }, sessionIdTokenLocalKey);
-					// }
 				}
 			}
 		} catch (err) {
@@ -98,6 +94,21 @@ function AppProviderContext({ children }) {
 			setLogged(false);
 		}
 	}
+
+	useEffect(() => {
+		function onConnect() {
+			setSocketConnected(true);
+			console.info('[Socket] connected!');
+		}
+
+		function onDisconnect() {
+			setSocketConnected(false);
+			console.info('[Socket] disconnected!');
+		}
+
+		socket.on('connect', onConnect);
+		socket.on('disconnect', onDisconnect);
+	}, []);
 
 	useEffect(() => {
 		onlineManager.setEventListener((setOnline) => NetInfo.addEventListener((state) => setOnline(state.isConnected)));
@@ -160,6 +171,7 @@ function AppProviderContext({ children }) {
 				boot,
 				logout,
 				deviceId,
+				socketConnected,
 			}}
 		>
 			{children}

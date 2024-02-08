@@ -9,6 +9,7 @@
 		"LASTNAME": "Lastname",
 		"USERNAME": "Username",
 		"REGISTER_HINT": "Don't you have an account? register!",
-		"LOGOUT": "Logout"
+		"LOGOUT": "Logout",
+		"SEND": "Send"
 	}
 }

@@ -3,7 +3,7 @@ import api from '.';
 export async function login(email = 'none@mail.com', password = 'password') {
 	try {
 		const response = await api({
-			host: 'http://localhost:3500', // beamer123$oft
+			host: 'http://10.0.2.2:3500', // beamer123$oft
 			microservice: 'core',
 			module: 'users/login',
 			method: 'POST',

@@ -25,12 +25,13 @@ export default function Chat() {
 	const [messages, setMessages] = useState([]);
 	const [message, setMessage] = useState('');
 
-	const { userData } = context;
+	const { userData, socketConnected } = context;
 
 	const { chatId, participantsId } = useLocalSearchParams();
 
 	async function getChatMessages() {
 		try {
+			console.info('getChatMessages called');
 			const response = await getMessages(userData?._id, chatId);
 			if (response && Array.isArray(response) && response.length > 0) {
 				setMessages(response);
@@ -41,7 +42,6 @@ export default function Chat() {
 	}
 
 	function emitMessage() {
-		messages.push({ _id: Math.random(), text: message });
 		setMessage('');
 		const messageData = {
 			chatId,
@@ -51,8 +51,22 @@ export default function Chat() {
 		socket.timeout(5000).emit('chat message', messageData);
 	}
 
+	function pushChat(msg) {
+		if (chatId === msg.chatId) {
+			setMessages((prev) => [...prev, { _id: Math.random(), text: msg.message }]);
+		}
+	}
+
+	useEffect(() => {
+		if (socketConnected) {
+			socket.timeout(5000).emit('join chat', chatId);
+		}
+	}, [socketConnected]);
+
 	useEffect(() => {
 		socket.connect();
+		socket.on('chat message', pushChat);
+
 		getChatMessages();
 
 		return () => {

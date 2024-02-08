@@ -1,7 +1,12 @@
 import {
-	Stack, useGlobalSearchParams, useLocalSearchParams,
+	useContext,
+	useEffect,
+	useState,
+} from 'react';
+import {
+	Stack,
+	useLocalSearchParams,
 } from 'expo-router';
-import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import socket from '../../src/api/socket';
@@ -9,9 +14,9 @@ import socket from '../../src/api/socket';
 import AuthContext from '../../src/providers/AuthContext';
 import Screen from '../../src/components/Screen';
 import Button from '../../src/components/Button';
-import { getChats } from '../../src/api/chats';
 import Text from '../../src/components/Text';
 import InputText from '../../src/components/InputText';
+import { getMessages } from '../../src/api/messages';
 
 export default function Chat() {
 	const { t } = useTranslation();
@@ -26,9 +31,12 @@ export default function Chat() {
 
 	async function getChatMessages() {
 		try {
-			// TODO: Implement get all past messages
+			const response = await getMessages(userData?._id, chatId);
+			if (response && Array.isArray(response) && response.length > 0) {
+				setMessages(response);
+			}
 		} catch (err) {
-			return console.info('Err getChatMessages ', err, ' in chat.jsx');
+			console.info('Err getChatMessages ', err, ' in chat.jsx');
 		}
 	}
 
@@ -40,12 +48,10 @@ export default function Chat() {
 			message,
 			userId: userData?._id,
 		};
-		console.info('messageData ', messageData);
 		socket.timeout(5000).emit('chat message', messageData);
 	}
 
 	useEffect(() => {
-		console.info('CONTEXT HOME ====> ', context);
 		socket.connect();
 		getChatMessages();
 

@@ -5,7 +5,6 @@ import {
 	ImageBackground,
 } from 'react-native';
 
-import { StatusBar } from 'expo-status-bar';
 import LoadingModalSpinner from '../LoadingModalSpinner';
 import NotNetwork from '../NoNetwork';
 

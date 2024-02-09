@@ -1,14 +1,24 @@
 import {
-	Stack, router,
+	useContext,
+	useEffect,
+	useState,
+} from 'react';
+import {
+	Stack,
+	router,
 } from 'expo-router';
-import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import {
+	FlatList,
+	TouchableOpacity,
+} from 'react-native';
 import AuthContext from '../../src/providers/AuthContext';
 import Screen from '../../src/components/Screen';
 import Button from '../../src/components/Button';
 import { getChats } from '../../src/api/chats';
 import Text from '../../src/components/Text';
+import styles from './home.styles';
 
 export default function Home() {
 	const { t } = useTranslation();
@@ -45,40 +55,34 @@ export default function Home() {
 	}, []);
 
 	return (
-		<Screen>
+		<Screen safe={false} style={styles.screen}>
 			<Stack.Screen
 				options={{
 					title: 'Home',
-					headerTitleStyle: {
-						fontWeight: 'bold',
-					},
-					headerTitle: 'Home',
+					headerTitleStyle: styles.headerTitle,
 				}}
 			/>
-			<Text
-				size="regular-20"
-				style={{
-					marginBottom: 20,
-				}}
-			>
-				{`Hi ${userData?.firstName || ''}! below you see your chats`}
+			<Text style={styles.welcomeMessage}>
+				{`Hi ${userData?.firstName || ''}! Below you see your chats:`}
 			</Text>
-			{chats ? chats.map((chat) => (
-				<Text
-					key={chat.chatId}
-					color="#000"
-					onPress={() => navigateToChat(chat)}
-				>
-					{chat.chatId}
-				</Text>
-			)) : null}
+			<FlatList
+				data={chats}
+				keyExtractor={(item) => item.chatId}
+				renderItem={({ item }) => (
+					<TouchableOpacity style={styles.chatItem} onPress={() => navigateToChat(item)}>
+						<Text style={styles.chatItemText}>
+							{item.chatId}
+							{' '}
+							{/* Consider showing a more descriptive name or last message */}
+						</Text>
+					</TouchableOpacity>
+				)}
+				contentContainerStyle={styles.chatList}
+			/>
 			<Button
 				label={`${t('LOGOUT')}`}
-				color="white10"
 				onPress={() => logout()}
-				style={{
-					marginTop: 300,
-				}}
+				style={styles.logoutButton}
 			/>
 		</Screen>
 	);

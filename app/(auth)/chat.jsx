@@ -1,14 +1,21 @@
 import {
 	useContext,
 	useEffect,
+	useRef,
 	useState,
 } from 'react';
+
 import {
-	Stack,
 	useLocalSearchParams,
 } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
+import {
+	FlatList,
+	KeyboardAvoidingView,
+	Platform,
+	View,
+} from 'react-native';
 import socket from '../../src/api/socket';
 
 import AuthContext from '../../src/providers/AuthContext';
@@ -17,17 +24,25 @@ import Button from '../../src/components/Button';
 import Text from '../../src/components/Text';
 import InputText from '../../src/components/InputText';
 import { getMessages } from '../../src/api/messages';
+import styles from './chat.styles';
 
 export default function Chat() {
-	const { t } = useTranslation();
 	const context = useContext(AuthContext);
 
 	const [messages, setMessages] = useState([]);
 	const [message, setMessage] = useState('');
 
-	const { userData, socketConnected } = context;
+	const {
+		userData,
+		socketConnected,
+	} = context;
 
-	const { chatId, participantsId } = useLocalSearchParams();
+	const {
+		chatId,
+		participantsId,
+	} = useLocalSearchParams();
+
+	const flatListRef = useRef();
 
 	async function getChatMessages() {
 		try {
@@ -75,28 +90,36 @@ export default function Chat() {
 	}, []);
 
 	return (
-		<Screen>
-			<Stack.Screen
-				options={{
-					title: `Chat ${chatId || ''}`,
-					headerTitleStyle: {
-						fontWeight: 'bold',
-					},
-					headerTitle: `Chat ${chatId || ''}`,
-				}}
+		<Screen safe={false} style={styles.screen}>
+			<FlatList
+				ref={flatListRef}
+				data={messages}
+				keyExtractor={(item, index) => item._id || index.toString()}
+				renderItem={({ item }) => (
+					<View style={[
+						styles.messageBubble,
+						item.userId === userData?._id ? styles.myMessage : styles.theirMessage,
+					]}
+					>
+						<Text style={styles.messageText}>{item.text}</Text>
+					</View>
+				)}
+				onContentSizeChange={() => flatListRef.current.scrollToEnd({ animated: true })}
+				onLayout={() => flatListRef.current.scrollToEnd({ animated: true })}
 			/>
-			{messages ? messages.map((msg) => (
-				<Text key={msg._id}>{msg.text}</Text>
-			)) : null}
-			<InputText
-				value={message}
-				onChangeText={(txt) => setMessage(txt)}
-			/>
-			<Button
-				label={`${t('SEND')}`}
-				color="white10"
-				onPress={() => emitMessage()}
-			/>
+			<View style={styles.inputContainer}>
+				<InputText
+					style={styles.input}
+					value={message}
+					onChangeText={setMessage}
+					placeholder="Type a message..."
+				/>
+				<Button
+					label="Send"
+					onPress={() => emitMessage()}
+					style={styles.sendButton}
+				/>
+			</View>
 		</Screen>
 	);
 }

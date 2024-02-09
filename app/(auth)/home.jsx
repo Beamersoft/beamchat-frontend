@@ -11,7 +11,6 @@ import { useTranslation } from 'react-i18next';
 
 import {
 	FlatList,
-	TouchableOpacity,
 } from 'react-native';
 import AuthContext from '../../src/providers/AuthContext';
 import Screen from '../../src/components/Screen';
@@ -19,12 +18,13 @@ import Button from '../../src/components/Button';
 import { getChats } from '../../src/api/chats';
 import Text from '../../src/components/Text';
 import styles from './home.styles';
+import UserChat from '../../src/components/UserChat';
 
 export default function Home() {
 	const { t } = useTranslation();
 	const context = useContext(AuthContext);
 
-	const [chats, setChats] = useState([]);
+	const [data, setData] = useState();
 
 	const {
 		logout,
@@ -35,8 +35,8 @@ export default function Home() {
 		try {
 			const res = await getChats();
 
-			if (res && res.chats) {
-				return setChats(res.chats);
+			if (res) {
+				return setData(res);
 			}
 			return null;
 		} catch (err) {
@@ -50,7 +50,6 @@ export default function Home() {
 	}
 
 	useEffect(() => {
-		console.info('CONTEXT HOME ====> ', context);
 		getAllChats();
 	}, []);
 
@@ -65,20 +64,21 @@ export default function Home() {
 			<Text style={styles.welcomeMessage}>
 				{`Hi ${userData?.firstName || ''}! Below you see your chats:`}
 			</Text>
-			<FlatList
-				data={chats}
-				keyExtractor={(item) => item.chatId}
-				renderItem={({ item }) => (
-					<TouchableOpacity style={styles.chatItem} onPress={() => navigateToChat(item)}>
-						<Text style={styles.chatItemText}>
-							{item.chatId}
-							{' '}
-							{/* Consider showing a more descriptive name or last message */}
-						</Text>
-					</TouchableOpacity>
-				)}
-				contentContainerStyle={styles.chatList}
-			/>
+			{(data && data?.chats && data?.users) ? (
+				<FlatList
+					data={data?.chats}
+					keyExtractor={(item) => item.chatId}
+					renderItem={({ item }) => (
+						<UserChat
+							userId={userData._id}
+							chat={item}
+							users={data.users}
+							navigateToChat={() => navigateToChat(item)}
+						/>
+					)}
+					contentContainerStyle={styles.chatList}
+				/>
+			) : null}
 			<Button
 				label={`${t('LOGOUT')}`}
 				onPress={() => logout()}

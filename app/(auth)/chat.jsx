@@ -1,4 +1,5 @@
 import {
+	useCallback,
 	useContext,
 	useEffect,
 	useRef,
@@ -8,14 +9,13 @@ import {
 import {
 	useLocalSearchParams,
 } from 'expo-router';
-import { useTranslation } from 'react-i18next';
 
 import {
-	FlatList,
-	KeyboardAvoidingView,
-	Platform,
 	View,
 } from 'react-native';
+
+import { FlashList } from '@shopify/flash-list';
+
 import socket from '../../src/api/socket';
 
 import AuthContext from '../../src/providers/AuthContext';
@@ -31,6 +31,7 @@ export default function Chat() {
 
 	const [messages, setMessages] = useState([]);
 	const [message, setMessage] = useState('');
+	const [page, setPage] = useState(0);
 
 	const {
 		userData,
@@ -42,18 +43,23 @@ export default function Chat() {
 		participantsId,
 	} = useLocalSearchParams();
 
-	const flatListRef = useRef();
+	const keyExtractor = useCallback((item, i) => `${i}-${item._id}`, []);
 
-	async function getChatMessages() {
+	async function getChatMessages(pag = 0) {
 		try {
 			console.info('getChatMessages called');
-			const response = await getMessages(userData?._id, chatId);
+			const response = await getMessages(userData?._id, chatId, 20, pag);
 			if (response && Array.isArray(response) && response.length > 0) {
-				setMessages(response);
+				setMessages((prev) => [...prev, ...response]);
 			}
 		} catch (err) {
 			console.info('Err getChatMessages ', err, ' in chat.jsx');
 		}
+	}
+
+	async function onEndReached() {
+		getChatMessages(page + 1);
+		setPage((prev) => prev + 1);
 	}
 
 	function emitMessage() {
@@ -68,7 +74,7 @@ export default function Chat() {
 
 	function pushChat(msg) {
 		if (chatId === msg.chatId) {
-			setMessages((prev) => [...prev, { _id: Math.random(), text: msg.message }]);
+			setMessages((prev) => [{ _id: Math.random(), text: msg.message }, ...prev]);
 		}
 	}
 
@@ -91,10 +97,9 @@ export default function Chat() {
 
 	return (
 		<Screen safe={false} style={styles.screen}>
-			<FlatList
-				ref={flatListRef}
+			<FlashList
 				data={messages}
-				keyExtractor={(item, index) => item._id || index.toString()}
+				keyExtractor={keyExtractor}
 				renderItem={({ item }) => (
 					<View style={[
 						styles.messageBubble,
@@ -104,8 +109,11 @@ export default function Chat() {
 						<Text style={styles.messageText}>{item.text}</Text>
 					</View>
 				)}
-				onContentSizeChange={() => flatListRef.current.scrollToEnd({ animated: true })}
-				onLayout={() => flatListRef.current.scrollToEnd({ animated: true })}
+				showsVerticalScrollIndicator={false}
+				inverted
+				estimatedItemSize={200}
+				onEndReached={() => onEndReached()}
+				onEndReachedThreshold={0.2}
 			/>
 			<View style={styles.inputContainer}>
 				<InputText
@@ -115,6 +123,7 @@ export default function Chat() {
 					placeholder="Type a message..."
 				/>
 				<Button
+					widthContent="15%"
 					label="Send"
 					onPress={() => emitMessage()}
 					style={styles.sendButton}

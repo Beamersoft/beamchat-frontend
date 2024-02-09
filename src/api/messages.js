@@ -1,6 +1,6 @@
 import api from '.';
 
-export async function getMessages(userId = 'none', chatId = 'none', limit = 20, skip = 0) {
+export async function getMessages(userId = 'none', chatId = 'none', limit = 20, page = 0) {
 	try {
 		const response = await api({
 			host: 'http://10.0.2.2:3501',
@@ -10,7 +10,7 @@ export async function getMessages(userId = 'none', chatId = 'none', limit = 20, 
 				userId,
 				chatId,
 				limit,
-				skip,
+				skip: limit * page,
 			},
 		});
 

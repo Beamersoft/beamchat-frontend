@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	input: {
-
+		width: '80%',
 	},
 	sendButton: {
 		backgroundColor: '#0078D4', // MSN blue

@@ -45,7 +45,8 @@
     "react-native-web": "~0.19.6",
     "react-query": "^3.39.3",
     "socket.io-client": "^4.7.4",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "@shopify/flash-list": "1.6.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -69,7 +69,7 @@ export default function Chat() {
 			message,
 			userId: userData?._id,
 		};
-		socket.timeout(5000).emit('chat message', messageData);
+		socket.timeout(5000).emit('CHAT_MESSAGE', messageData);
 	}
 
 	function pushChat(msg) {
@@ -80,13 +80,13 @@ export default function Chat() {
 
 	useEffect(() => {
 		if (socketConnected) {
-			socket.timeout(5000).emit('join chat', chatId);
+			socket.timeout(5000).emit('CHAT_JOIN', chatId);
 		}
 	}, [socketConnected]);
 
 	useEffect(() => {
 		socket.connect();
-		socket.on('chat message', pushChat);
+		socket.on('CHAT_MESSAGE', pushChat);
 
 		getChatMessages();
 

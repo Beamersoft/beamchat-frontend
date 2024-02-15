@@ -1,19 +1,20 @@
 diff --git a/node_modules/brorand/index.js b/node_modules/brorand/index.js
-index 9a0fff4..db8f616 100644
+index 9a0fff4..b5b53eb 100644
 --- a/node_modules/brorand/index.js
 +++ b/node_modules/brorand/index.js
-@@ -46,9 +46,13 @@ if (typeof self === 'object') {
+@@ -45,10 +45,11 @@ if (typeof self === 'object') {
+ 
    // Safari's WebWorkers do not have `crypto`
    } else if (typeof window === 'object') {
-     // Old junk
+-    // Old junk
 -    Rand.prototype._rand = function() {
 -      throw new Error('Not implemented yet');
 -    };
-+			Rand.prototype._rand = function _rand(n) {
-+				var arr = new Uint8Array(n);
-+				self.crypto.getRandomValues(arr);
-+				return arr;
-+			};
++		Rand.prototype._rand = function _rand(n) {
++			var arr = new Uint8Array(n);
++			self.crypto.getRandomValues(arr);
++			return arr;
++		};
    }
  } else {
    // Node.js or Web worker with no crypto support

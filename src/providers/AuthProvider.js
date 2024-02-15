@@ -151,12 +151,7 @@ function AppProviderContext({ children }) {
 		<AuthProvider
 			value={{
 				userData,
-				setUserData: (nuserData, jwt) => {
-					setUserData(nuserData);
-					if (jwt) {
-						storeData({ jwt }, sessionLocalKey);
-					}
-				},
+				setUserData,
 				logged,
 				setLogged,
 				loading,

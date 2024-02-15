@@ -2,7 +2,6 @@ import {
 	useCallback,
 	useContext,
 	useEffect,
-	useRef,
 	useState,
 } from 'react';
 
@@ -40,7 +39,6 @@ export default function Chat() {
 
 	const {
 		chatId,
-		participantsId,
 	} = useLocalSearchParams();
 
 	const keyExtractor = useCallback((item, i) => `${i}-${item._id}`, []);

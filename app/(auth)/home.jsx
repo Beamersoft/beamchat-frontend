@@ -24,7 +24,8 @@ export default function Home() {
 	const { t } = useTranslation();
 	const context = useContext(AuthContext);
 
-	const [data, setData] = useState();
+	const [chats, setChats] = useState();
+	const [users, setUsers] = useState();
 
 	const {
 		logout,
@@ -35,8 +36,12 @@ export default function Home() {
 		try {
 			const res = await getChats();
 
-			if (res) {
-				return setData(res);
+			if (res?.chats) {
+				setChats(res.chats);
+			}
+
+			if (res?.users) {
+				setUsers(res.users);
 			}
 			return null;
 		} catch (err) {
@@ -64,15 +69,15 @@ export default function Home() {
 			<Text style={styles.welcomeMessage}>
 				{`Hi ${userData?.firstName || ''}! Below you see your chats:`}
 			</Text>
-			{(data && data?.chats && data?.users) ? (
+			{(chats && users) ? (
 				<FlatList
-					data={data?.chats}
+					data={chats}
 					keyExtractor={(item) => item.chatId}
 					renderItem={({ item }) => (
 						<UserChat
-							userId={userData._id}
+							userId={userData?._id || ''}
 							chat={item}
-							users={data.users}
+							users={users}
 							navigateToChat={() => navigateToChat(item)}
 						/>
 					)}

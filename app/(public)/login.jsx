@@ -19,6 +19,7 @@ export default function Login() {
 	const {
 		userData,
 		setToken,
+		setUserData,
 	} = context;
 
 	const [email, setEmail] = useState();
@@ -35,6 +36,7 @@ export default function Login() {
 				if (res) {
 					await setToken(res.jwt);
 					delete res.jwt;
+					setUserData(res);
 					await storeData(res, 'userData');
 				}
 			}

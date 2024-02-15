@@ -15,7 +15,7 @@ import {
 
 import { FlashList } from '@shopify/flash-list';
 
-import { createECDH } from 'react-native-quick-crypto';
+import crypto from 'react-native-quick-crypto';
 
 import socket from '../../src/api/socket';
 
@@ -80,10 +80,13 @@ export default function Chat() {
 
 	function generateKey() {
 		const curveName = 'prime192v1';
-		const ecdh = createECDH(curveName);
-		const publicKey = ecdh.generateKeys().toString('base64');
+		const keyObject = crypto.createECDH(curveName);
+		keyObject.generateKeys();
 
-		console.info('publicKey ', publicKey);
+		const privateKey = keyObject.getPrivateKey().toString('base64');
+		const publicKey = keyObject.getPublicKey().toString('base64');
+
+		console.info(privateKey, publicKey); // this works only modifing brorand lib
 	}
 
 	useEffect(() => {

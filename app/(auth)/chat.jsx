@@ -15,6 +15,8 @@ import {
 
 import { FlashList } from '@shopify/flash-list';
 
+import { createECDH } from 'react-native-quick-crypto';
+
 import socket from '../../src/api/socket';
 
 import AuthContext from '../../src/providers/AuthContext';
@@ -76,6 +78,14 @@ export default function Chat() {
 		}
 	}
 
+	function generateKey() {
+		const curveName = 'prime192v1';
+		const ecdh = createECDH(curveName);
+		const publicKey = ecdh.generateKeys().toString('base64');
+
+		console.info('publicKey ', publicKey);
+	}
+
 	useEffect(() => {
 		if (socketConnected) {
 			socket.timeout(5000).emit('CHAT_JOIN', chatId);
@@ -83,6 +93,7 @@ export default function Chat() {
 	}, [socketConnected]);
 
 	useEffect(() => {
+		generateKey();
 		socket.connect();
 		socket.on('CHAT_MESSAGE', pushChat);
 

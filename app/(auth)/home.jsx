@@ -50,8 +50,8 @@ export default function Home() {
 	}
 
 	function navigateToChat(chat) {
-		const { chatId, participantsId } = chat;
-		router.navigate({ pathname: 'chat', params: { chatId, participantsId } });
+		const { chatId, participants } = chat;
+		router.navigate({ pathname: 'chat', params: { chatId, participants: JSON.stringify(participants) } });
 	}
 
 	useEffect(() => {

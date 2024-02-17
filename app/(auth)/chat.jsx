@@ -6,14 +6,12 @@ import {
 } from 'react';
 
 import {
-	useLocalSearchParams,
-} from 'expo-router';
-
-import {
 	View,
 } from 'react-native';
 
-import * as SecureStore from 'expo-secure-store';
+import {
+	useLocalSearchParams,
+} from 'expo-router';
 
 import { FlashList } from '@shopify/flash-list';
 
@@ -27,20 +25,12 @@ import Button from '../../src/components/Button';
 import Text from '../../src/components/Text';
 import InputText from '../../src/components/InputText';
 import { getMessages } from '../../src/api/messages';
+import {
+	decrypt,
+	encrypt,
+} from '../../src/helpers/crypto';
 import styles from './chat.styles';
-import { decrypt, encrypt } from '../../src/helpers/crypto';
-
-async function save(key, value) {
-	await SecureStore.setItemAsync(key, value);
-}
-
-async function getValueFor(key) {
-	const result = await SecureStore.getItemAsync(key);
-	if (result) {
-		return result;
-	}
-	return undefined;
-}
+import { secureGetData, secureStoreData } from '../../src/helpers/SecureStorageData';
 
 export default function Chat() {
 	const context = useContext(AuthContext);
@@ -48,6 +38,10 @@ export default function Chat() {
 	const [messages, setMessages] = useState([]);
 	const [message, setMessage] = useState('');
 	const [page, setPage] = useState(0);
+	const [secretKey, setSecretKey] = useState();
+	const [publicKey, setPublicKey] = useState();
+	const [publicKeyOtherParty, setPublicKeyOtherParty] = useState();
+	const [chatAvailable, setChatAvailable] = useState(false);
 
 	const {
 		userData,
@@ -56,6 +50,7 @@ export default function Chat() {
 
 	const {
 		chatId,
+		participants,
 	} = useLocalSearchParams();
 
 	const keyExtractor = useCallback((item, i) => `${i}-${item._id}`, []);
@@ -65,10 +60,11 @@ export default function Chat() {
 			console.info('getChatMessages called');
 			const response = await getMessages(userData?._id, chatId, 20, pag);
 			if (response && Array.isArray(response) && response.length > 0) {
+				// TODO: Desencriptar cada mensaje y luego pushearlo
 				setMessages((prev) => [...prev, ...response]);
 			}
 		} catch (err) {
-			console.info('Err getChatMessages ', err, ' in chat.jsx');
+			console.info('Error getChatMessages ', err, ' in chat.jsx');
 		}
 	}
 
@@ -82,6 +78,7 @@ export default function Chat() {
 		const messageData = {
 			chatId,
 			message,
+			publicKey,
 			userId: userData?._id,
 		};
 		socket.timeout(5000).emit('CHAT_MESSAGE', messageData);
@@ -93,13 +90,57 @@ export default function Chat() {
 		}
 	}
 
-	async function generateKey() {
+	async function initializeChat() {
+		try {
+			// El usuario tiene clave privada?
+			// const priKey = await secureGetData(`prik-${chatId}`);
+
+			// El chat contiene otro participante y tiene una clave pública entonces se puede iniciar el chat.
+			const participantsOnChat = JSON.parse(participants);
+			const otherPartyIdx = participantsOnChat.findIndex((p) => p.id !== userData?._id);
+
+			if (otherPartyIdx !== -1 && participantsOnChat[otherPartyIdx].pubKey) {
+				setChatAvailable(true); // TODO: Implementar bloqueo de chat, solo si el otro usuario se unió y tiene su pub key puede desbloquearse.
+			}
+
+			// No tiene clave privada, genera las dos nuevamente.
+
+			// if (!priKey) {
+			// 	const ecdh = crypto.createECDH('prime192v1');
+			// 	ecdh.generateKeys();
+
+			// 	let privateKeyToSave = ecdh.getPrivateKey().toString('base64');
+			// 	await secureStoreData(`prik-${chatId}`, privateKeyToSave);
+			// 	privateKeyToSave = null;
+
+			// 	const publicKeyToSave = ecdh.getPublicKey().toString('base64');
+			// 	await secureStoreData(`pubk-${chatId}`, publicKeyToSave);
+
+			// 	setPublicKey(publicKeyToSave);
+			// }
+		} catch (err) {
+			console.info('Error checkKeys ', err, ' in Chat.jsx');
+		}
+	}
+
+	// useEffect(() => {
+	// 	if (publicKey) {
+	// 		const messageData = {
+	// 			chatId,
+	// 			message: ,
+	// 			userId: userData?._id,
+	// 		};
+	// 		socket.timeout(5000).emit('CHAT_MESSAGE', messageData);
+	// 	}
+	// }, [publicKey]);
+
+	async function generateKey2() {
 		console.info('====================================> START of End-to-End logic');
 
 		// First stage
 
 		const curveName = 'prime192v1';
-		const ecdh = crypto.createECDH(curveName); // perhaps this should be saved in secure store.
+		const ecdh = crypto.createECDH(curveName);
 		ecdh.generateKeys();
 
 		const privateKey = ecdh.getPrivateKey().toString('base64');
@@ -171,15 +212,15 @@ export default function Chat() {
 	}, [socketConnected]);
 
 	useEffect(() => {
-		generateKey();
-		socket.connect();
-		socket.on('CHAT_MESSAGE', pushChat);
+		// socket.connect();
+		// socket.on('CHAT_MESSAGE', pushChat);
 
-		getChatMessages();
+		initializeChat();
+		// getChatMessages();
 
-		return () => {
-			socket.disconnect();
-		};
+		// return () => {
+		// 	socket.disconnect();
+		// };
 	}, []);
 
 	return (

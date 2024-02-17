@@ -11,20 +11,28 @@ function UserChat({
 }) {
 	return (
 		<TouchableOpacity style={styles.chatItem} onPress={() => navigateToChat(chat)}>
-			{(chat?.participantsId) ? chat?.participantsId.map((id) => {
-				if (id !== userId) {
+			{(chat?.participants && chat?.participants.length > 1) ? chat?.participants.map((participant) => {
+				if (participant.id !== userId) {
 					return (
 						<Text
-							key={id}
+							key={participant.id}
 							style={styles.chatItemText}
 						>
-							{`${users[id]?.firstName || chat.chatId} ${users[id]?.lastName || ''}`}
+							{`${users[participant.id]?.firstName || chat.chatId} ${users[participant.id]?.lastName || ''}`}
 							{' '}
 						</Text>
 					);
 				}
 				return null;
 			}) : null}
+			{(chat?.participants && chat?.participants.length === 1 && chat?.participants[0].id === userId) ? (
+				<Text
+					style={styles.chatItemText}
+				>
+					{'New chat'}
+					{' '}
+				</Text>
+			) : null}
 		</TouchableOpacity>
 	);
 }

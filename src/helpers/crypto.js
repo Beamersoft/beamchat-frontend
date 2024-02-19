@@ -1,10 +1,12 @@
 import crypto from 'react-native-quick-crypto';
 
+export const CRYPTO_CURVE_NAME = 'prime192v1';
+export const CRYPTO_CIPHER_ALGO = 'aes-256-ctr';
+
 export async function encrypt(text, secretKey) {
 	try {
-		const algorithm = 'aes-256-ctr';
 		const iv = crypto.randomBytes(16);
-		const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
+		const cipher = crypto.createCipheriv(CRYPTO_CIPHER_ALGO, secretKey, iv);
 		const encrypted = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()]);
 		return {
 			iv: iv.toString('hex'),
@@ -18,8 +20,7 @@ export async function encrypt(text, secretKey) {
 
 export async function decrypt(hash, secretKey) {
 	try {
-		const algorithm = 'aes-256-ctr';
-		const decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(hash.iv, 'hex'));
+		const decipher = crypto.createDecipheriv(CRYPTO_CIPHER_ALGO, secretKey, Buffer.from(hash.iv, 'hex'));
 		const decrypted = Buffer.concat([decipher.update(Buffer.from(hash.content, 'base64')), decipher.final()]);
 		return decrypted.toString();
 	} catch (err) {
@@ -28,8 +29,20 @@ export async function decrypt(hash, secretKey) {
 	}
 }
 
-// export function createECDHObject(privateKey) {
-// 	const curveName = 'prime192v1';
-// 	const ecdh = crypto.createECDH(curveName);
-// 	ecdh.generateKeys();
-// }
+export function generatePairOfKeys() {
+	try {
+		const ecdh = crypto.createECDH(CRYPTO_CURVE_NAME);
+		ecdh.generateKeys();
+
+		const privateKey = ecdh.getPrivateKey().toString('base64');
+		const publicKey = ecdh.getPublicKey().toString('base64');
+
+		return {
+			privateKey,
+			publicKey,
+		};
+	} catch (err) {
+		console.info('Error generatePairOfKeys method: ', err, ' in crypto.js');
+		return null;
+	}
+}

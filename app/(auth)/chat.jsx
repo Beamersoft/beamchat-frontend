@@ -93,15 +93,18 @@ export default function Chat() {
 	async function initializeChat() {
 		try {
 			// El usuario tiene clave privada?
-			// const priKey = await secureGetData(`prik-${chatId}`);
+			console.info('chatId ', chatId);
+			const priKey = await secureGetData(`prik-${chatId}`);
+
+			console.info('priKey ', priKey);
 
 			// El chat contiene otro participante y tiene una clave pública entonces se puede iniciar el chat.
-			const participantsOnChat = JSON.parse(participants);
-			const otherPartyIdx = participantsOnChat.findIndex((p) => p.id !== userData?._id);
+			// const participantsOnChat = JSON.parse(participants);
+			// const otherPartyIdx = participantsOnChat.findIndex((p) => p.id !== userData?._id);
 
-			if (otherPartyIdx !== -1 && participantsOnChat[otherPartyIdx].pubKey) {
-				setChatAvailable(true); // TODO: Implementar bloqueo de chat, solo si el otro usuario se unió y tiene su pub key puede desbloquearse.
-			}
+			// if (otherPartyIdx !== -1 && participantsOnChat[otherPartyIdx].pubKey) {
+			// 	setChatAvailable(true); // TODO: Implementar bloqueo de chat, solo si el otro usuario se unió y tiene su pub key puede desbloquearse.
+			// }
 
 			// No tiene clave privada, genera las dos nuevamente.
 

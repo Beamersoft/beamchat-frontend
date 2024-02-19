@@ -9,8 +9,8 @@ const styles = (disabled) => StyleSheet.create({
 		zIndex: 999,
 	},
 	container_buttoncircle: {
-		width: 40,
-		height: 40,
+		width: 60,
+		height: 60,
 		justifyContent: 'center',
 		alignItems: 'center',
 		backgroundColor: disabled ? Colors('gray10') : Colors('white10'),

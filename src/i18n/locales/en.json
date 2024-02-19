@@ -10,6 +10,8 @@
 		"USERNAME": "Username",
 		"REGISTER_HINT": "Don't you have an account? register!",
 		"LOGOUT": "Logout",
-		"SEND": "Send"
+		"SEND": "Send",
+		"CANCEL": "Cancel",
+		"HOME_CREATE_CHAT_TITLE": "Type the email of your friend to create a new chat"
 	}
 }

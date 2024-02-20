@@ -1,7 +1,7 @@
 import {
 	useContext,
-	useEffect,
 	useState,
+	useCallback,
 } from 'react';
 
 import {
@@ -11,6 +11,7 @@ import {
 import {
 	Stack,
 	router,
+	useFocusEffect,
 } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
@@ -111,10 +112,12 @@ export default function Home() {
 		}
 	}
 
-	useEffect(() => {
-		getAllChats();
-		getAllNotifications();
-	}, []);
+	useFocusEffect(
+		useCallback(() => {
+			getAllChats();
+			getAllNotifications();
+		}, []),
+	);
 
 	return (
 		<Screen safe={false} style={styles.screen}>
@@ -124,7 +127,7 @@ export default function Home() {
 					headerRight: () => (
 						<Badge
 							icon="envelope"
-							value={notifications.length}
+							value={notifications.filter((notif) => notif.status === 'pending').length}
 							onPress={() => router.navigate({ pathname: 'notifications', params: { notifications: JSON.stringify(notifications) } })}
 						/>
 					),

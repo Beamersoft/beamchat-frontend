@@ -36,4 +36,24 @@ export async function createChat(invitedEmail, pubKey) {
 	}
 }
 
+export async function acceptChatInvite(chatId, pubKey) {
+	try {
+		const response = await api({
+			host: 'http://10.0.2.2:3501',
+			module: 'chats/accept',
+			method: 'POST',
+			data: {
+				chatId,
+				pubKey,
+			},
+		});
+
+		if (response.data) return response.data;
+		throw new Error('Lib getChats no data');
+	} catch (err) {
+		console.info('getChats error: ', err.status, err.message);
+		throw err;
+	}
+}
+
 export default '1.0';

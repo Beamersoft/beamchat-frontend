@@ -6,7 +6,7 @@ import {
 	TouchableOpacity,
 } from 'react-native';
 
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Screen from '../../src/components/Screen';
@@ -14,20 +14,40 @@ import Text from '../../src/components/Text';
 
 import styles from './notifications.styles';
 import formatDate from '../../src/helpers/dates';
+import { acceptChatInvite } from '../../src/api/chats';
+import { generatePairOfKeys } from '../../src/helpers/crypto';
+import { secureStoreData } from '../../src/helpers/SecureStorageData';
 
 function Notifications() {
 	const { notifications } = useLocalSearchParams();
 
-	// Function to handle accept
-	const handleAccept = (id) => {
-		console.log('Accept', id);
-		// Implement your accept logic here
-	};
+	async function handleAccept(item) {
+		if (item.type === 'NOTIFICATION_CHAT_INVITE') {
+			let privateKey;
+			try {
+				const keys = generatePairOfKeys();
+				privateKey = keys.privateKey;
+				delete keys.privateKey;
 
-	// Function to handle reject
+				const res = await acceptChatInvite(item.chatId, keys.publicKey);
+
+				if (res) {
+					await secureStoreData(privateKey, `prik-${res.chatId}`);
+					router.navigate({ pathname: 'home' });
+					// TODO: Show success
+				} else {
+					// TODO: Show error
+				}
+			} catch (err) {
+				console.info('Err handleAccept ', err.message, ' in notifications.jsx');
+			} finally {
+				privateKey = null;
+			}
+		}
+	}
+
 	const handleReject = (id) => {
-		console.log('Reject', id);
-		// Implement your reject logic here
+
 	};
 
 	// Function to render the status chip
@@ -53,14 +73,16 @@ function Notifications() {
 						<Text style={styles.notificationType}>{item.type.replace('NOTIFICATION_', '').replace('_', ' ').toLowerCase()}</Text>
 						<Text style={styles.notificationDate}>{formatDate(new Date(item.sentAt))}</Text>
 						{renderStatusChip(item.status)}
-						<View style={styles.buttonContainer}>
-							<TouchableOpacity onPress={() => handleAccept(item._id)} style={styles.button}>
-								<Icon name="check" size={20} color="#4CAF50" />
-							</TouchableOpacity>
-							<TouchableOpacity onPress={() => handleReject(item._id)} style={styles.button}>
-								<Icon name="times" size={20} color="#F44336" />
-							</TouchableOpacity>
-						</View>
+						{item.status === 'pending' ? (
+							<View style={styles.buttonContainer}>
+								<TouchableOpacity onPress={() => handleAccept(item)} style={styles.button}>
+									<Icon name="check" size={20} color="#4CAF50" />
+								</TouchableOpacity>
+								<TouchableOpacity onPress={() => handleReject(item)} style={styles.button}>
+									<Icon name="times" size={20} color="#F44336" />
+								</TouchableOpacity>
+							</View>
+						) : null}
 					</View>
 				)}
 			/>

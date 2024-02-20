@@ -13,11 +13,7 @@ function AuthLayout() {
 				headerTintColor: '#fff',
 				headerBackTitle: 'Back',
 			}}
-		>
-			<Stack.Screen
-				name="home"
-			/>
-		</Stack>
+		/>
 	);
 }
 

@@ -25,6 +25,8 @@ import Text from '../../src/components/Text';
 import CreateChat from '../../src/main/home/CreateChat';
 import { generatePairOfKeys } from '../../src/helpers/crypto';
 import { secureStoreData } from '../../src/helpers/SecureStorageData';
+import Badge from '../../src/components/Badge';
+import { getNotifications } from '../../src/api/notifications';
 
 export default function Home() {
 	const { t } = useTranslation();
@@ -35,6 +37,7 @@ export default function Home() {
 	const [openCreateChat, setOpenCreateChat] = useState(false);
 	const [loadingAddChat, setLoadingAddChat] = useState(false);
 	const [errorCreateChat, setErrorCreateChat] = useState(null);
+	const [notifications, setNotifications] = useState([]);
 
 	const {
 		logout,
@@ -55,6 +58,19 @@ export default function Home() {
 			return null;
 		} catch (err) {
 			return console.info('Err getAllChats ', err, ' in home.jsx');
+		}
+	}
+
+	async function getAllNotifications() {
+		try {
+			const res = await getNotifications();
+
+			if (res?.notifications) {
+				setNotifications(res.notifications);
+			}
+			return null;
+		} catch (err) {
+			return console.info('Err getAllNotifications ', err, ' in home.jsx');
 		}
 	}
 
@@ -97,14 +113,21 @@ export default function Home() {
 
 	useEffect(() => {
 		getAllChats();
+		getAllNotifications();
 	}, []);
 
 	return (
 		<Screen safe={false} style={styles.screen}>
 			<Stack.Screen
 				options={{
-					title: 'Home',
-					headerTitleStyle: styles.headerTitle,
+					// eslint-disable-next-line react/no-unstable-nested-components
+					headerRight: () => (
+						<Badge
+							icon="envelope"
+							value={notifications.length}
+							onPress={() => router.navigate({ pathname: 'notifications', params: { notifications: JSON.stringify(notifications) } })}
+						/>
+					),
 				}}
 			/>
 			<Text style={styles.welcomeMessage}>

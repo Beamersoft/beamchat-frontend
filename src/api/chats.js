@@ -4,7 +4,7 @@ export async function getChats() {
 	try {
 		const response = await api({
 			host: 'http://10.0.2.2:3501',
-			module: 'chat/all',
+			module: 'chats/all',
 			method: 'GET',
 		});
 
@@ -20,7 +20,7 @@ export async function createChat(invitedEmail, pubKey) {
 	try {
 		const response = await api({
 			host: 'http://10.0.2.2:3501',
-			module: 'chat',
+			module: 'chats',
 			method: 'POST',
 			data: {
 				invitedEmail,

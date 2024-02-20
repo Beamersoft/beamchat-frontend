@@ -101,7 +101,6 @@ function Screen({
 				<FooterComponent />
 			)}
 		</SafeAreaView>
-
 	);
 }
 

@@ -66,7 +66,7 @@ export default function Chat() {
 
 					return {
 						...msg,
-						text: decryptedText,
+						text: decryptedText || 'Encrypted data',
 					};
 				});
 				const decryptedMessages = await Promise.all(promisesToDecrypt);
@@ -105,7 +105,7 @@ export default function Chat() {
 				content: msg.message,
 			}, secretKey);
 
-			setMessages((prev) => [{ _id: Math.random(), text: decryptedMessage }, ...prev]);
+			setMessages((prev) => [{ _id: Math.random(), text: decryptedMessage || 'Encrypted data' }, ...prev]);
 		}
 	}
 

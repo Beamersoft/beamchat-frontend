@@ -26,11 +26,12 @@ import Text from '../../src/components/Text';
 import InputText from '../../src/components/InputText';
 import { getMessages } from '../../src/api/messages';
 import {
+	CRYPTO_CURVE_NAME,
 	decrypt,
 	encrypt,
 } from '../../src/helpers/crypto';
 import styles from './chat.styles';
-import { secureGetData, secureStoreData } from '../../src/helpers/SecureStorageData';
+import { secureGetData } from '../../src/helpers/SecureStorageData';
 
 export default function Chat() {
 	const context = useContext(AuthContext);
@@ -39,8 +40,6 @@ export default function Chat() {
 	const [message, setMessage] = useState('');
 	const [page, setPage] = useState(0);
 	const [secretKey, setSecretKey] = useState();
-	const [publicKey, setPublicKey] = useState();
-	const [publicKeyOtherParty, setPublicKeyOtherParty] = useState();
 	const [chatAvailable, setChatAvailable] = useState(false);
 
 	const {
@@ -55,13 +54,24 @@ export default function Chat() {
 
 	const keyExtractor = useCallback((item, i) => `${i}-${item._id}`, []);
 
-	async function getChatMessages(pag = 0) {
+	async function getChatMessages(secretk, pag = 0) {
 		try {
-			console.info('getChatMessages called');
 			const response = await getMessages(userData?._id, chatId, 20, pag);
 			if (response && Array.isArray(response) && response.length > 0) {
-				// TODO: Desencriptar cada mensaje y luego pushearlo
-				setMessages((prev) => [...prev, ...response]);
+				const promisesToDecrypt = response.map(async (msg) => {
+					const decryptedText = await decrypt({
+						iv: msg.iv,
+						content: msg.text,
+					}, secretk);
+
+					return {
+						...msg,
+						text: decryptedText,
+					};
+				});
+				const decryptedMessages = await Promise.all(promisesToDecrypt);
+
+				setMessages((prev) => [...prev, ...decryptedMessages]);
 			}
 		} catch (err) {
 			console.info('Error getChatMessages ', err, ' in chat.jsx');
@@ -69,144 +79,79 @@ export default function Chat() {
 	}
 
 	async function onEndReached() {
-		getChatMessages(page + 1);
+		secretKey && getChatMessages(secretKey, page + 1);
 		setPage((prev) => prev + 1);
 	}
 
-	function emitMessage() {
+	async function emitMessage() {
 		setMessage('');
+		// encrypt
+		const encryptedData = await encrypt(message, secretKey);
+
 		const messageData = {
 			chatId,
-			message,
-			publicKey,
+			iv: encryptedData.iv,
+			message: encryptedData.content,
 			userId: userData?._id,
 		};
 		socket.timeout(5000).emit('CHAT_MESSAGE', messageData);
 	}
 
-	function pushChat(msg) {
+	async function pushChat(msg) {
 		if (chatId === msg.chatId) {
-			setMessages((prev) => [{ _id: Math.random(), text: msg.message }, ...prev]);
+			// decrypt
+			const decryptedMessage = await decrypt({
+				iv: msg.iv,
+				content: msg.message,
+			}, secretKey);
+
+			setMessages((prev) => [{ _id: Math.random(), text: decryptedMessage }, ...prev]);
 		}
 	}
 
 	async function initializeChat() {
+		let priKey;
+		let secretKeyGenerated;
 		try {
-			// El usuario tiene clave privada?
-			console.info('chatId ', chatId);
-			const priKey = await secureGetData(`prik-${chatId}`);
+			priKey = await secureGetData(`prik-${chatId}`);
 
-			console.info('priKey ', priKey);
+			if (!priKey) {
+				return;
+			}
 
 			// El chat contiene otro participante y tiene una clave pública entonces se puede iniciar el chat.
-			// const participantsOnChat = JSON.parse(participants);
-			// const otherPartyIdx = participantsOnChat.findIndex((p) => p.id !== userData?._id);
+			const participantsOnChat = JSON.parse(participants);
+			const otherPartyIdx = participantsOnChat.findIndex((p) => p.id !== userData?._id);
+			const otherPartyPublicKey = participantsOnChat[otherPartyIdx]?.pubKey;
 
-			// if (otherPartyIdx !== -1 && participantsOnChat[otherPartyIdx].pubKey) {
-			// 	setChatAvailable(true); // TODO: Implementar bloqueo de chat, solo si el otro usuario se unió y tiene su pub key puede desbloquearse.
-			// }
+			if (otherPartyIdx === -1 || !otherPartyPublicKey) {
+				return;
+			}
 
-			// No tiene clave privada, genera las dos nuevamente.
+			setChatAvailable(true);
 
-			// if (!priKey) {
-			// 	const ecdh = crypto.createECDH('prime192v1');
-			// 	ecdh.generateKeys();
+			const privateKeyBuffer = Buffer.from(priKey, 'base64');
+			const otherPartyPublicKeyBuffer = Buffer.from(otherPartyPublicKey, 'base64');
 
-			// 	let privateKeyToSave = ecdh.getPrivateKey().toString('base64');
-			// 	await secureStoreData(`prik-${chatId}`, privateKeyToSave);
-			// 	privateKeyToSave = null;
+			const ecdhFromPrivateKey = crypto.createECDH(CRYPTO_CURVE_NAME);
+			ecdhFromPrivateKey.setPrivateKey(privateKeyBuffer);
 
-			// 	const publicKeyToSave = ecdh.getPublicKey().toString('base64');
-			// 	await secureStoreData(`pubk-${chatId}`, publicKeyToSave);
+			secretKeyGenerated = ecdhFromPrivateKey.computeSecret(otherPartyPublicKeyBuffer).toString('base64');
 
-			// 	setPublicKey(publicKeyToSave);
-			// }
+			setSecretKey(secretKeyGenerated);
 		} catch (err) {
 			console.info('Error checkKeys ', err, ' in Chat.jsx');
+		} finally {
+			priKey = null;
+			await getChatMessages(secretKeyGenerated);
 		}
 	}
 
-	// useEffect(() => {
-	// 	if (publicKey) {
-	// 		const messageData = {
-	// 			chatId,
-	// 			message: ,
-	// 			userId: userData?._id,
-	// 		};
-	// 		socket.timeout(5000).emit('CHAT_MESSAGE', messageData);
-	// 	}
-	// }, [publicKey]);
-
-	async function generateKey2() {
-		console.info('====================================> START of End-to-End logic');
-
-		// First stage
-
-		const curveName = 'prime192v1';
-		const ecdh = crypto.createECDH(curveName);
-		ecdh.generateKeys();
-
-		const privateKey = ecdh.getPrivateKey().toString('base64');
-		const publicKey = ecdh.getPublicKey().toString('base64');
-
-		console.info('Step 1 -> user 1 creates its private key and public key.');
-		console.info('Private key ', privateKey);
-		console.info('Public key ', publicKey);
-
-		console.info('Step 2 -> user 2 generates its keys, receives the user 1 public key and generates shared secret');
-
-		const ecdh2 = crypto.createECDH(curveName); // perhaps this should be saved in secure store.
-		ecdh2.generateKeys();
-
-		const privateKey2 = ecdh2.getPrivateKey().toString('base64');
-		const publicKey2 = ecdh2.getPublicKey().toString('base64');
-
-		console.info('Private 2 key ', privateKey2);
-		console.info('Public 2 key ', publicKey2);
-
-		const receivedPublicKey = Buffer.from(publicKey, 'base64');
-		const secretKey2 = ecdh2.computeSecret(receivedPublicKey); // -> will be used to encrypt messages
-
-		const receivedPublicKey2 = Buffer.from(publicKey2, 'base64');
-		const secretKey = ecdh.computeSecret(receivedPublicKey2); // -> will be used to encrypt messages
-
-		console.info('shared secretKey for 2 ', secretKey2.toString('base64'));
-
-		console.info('shared secretKey for 1 ', secretKey.toString('base64'));
-
-		const encryptedData = await encrypt('HOLA', secretKey.toString('base64'));
-		console.info('Encrypt message "HOLA" :', encryptedData);
-
-		console.info('Decrypt message "HOLA" :', await decrypt(encryptedData, secretKey.toString('base64')));
-
-		// Second stage, take the private key and decrypt the message
-
-		// Initialize ecdh with private key
-
-		const ecdhFromPrivateKey = crypto.createECDH('prime192v1');
-		const privateKeyToSave = ecdh.getPrivateKey().toString('base64');
-
-		console.info('privateKeyToSave ', privateKeyToSave);
-
-		await save('private_key', privateKeyToSave);
-
-		const savedData = await getValueFor('private_key');
-
-		console.info('savedData ', savedData);
-
-		const privateKeyBuffer = Buffer.from(savedData, 'base64');
-		ecdhFromPrivateKey.setPrivateKey(privateKeyBuffer);
-
-		const finalSecretKey = ecdhFromPrivateKey.computeSecret(receivedPublicKey2).toString('base64');
-		console.info('SECRET KEY OBTAINED FROM PRIVATE KEY: ', finalSecretKey);
-
-		const finalEncryptedData = await encrypt('HOLA', finalSecretKey);
-		console.info('encrypt message: ', finalEncryptedData);
-
-		console.info('decrypted message: ', await decrypt(finalEncryptedData, finalSecretKey));
-
-		console.info('====================================> END of End-to-End logic');
-	}
+	useEffect(() => {
+		if (secretKey) {
+			socket.on('CHAT_MESSAGE', pushChat);
+		}
+	}, [secretKey]);
 
 	useEffect(() => {
 		if (socketConnected) {
@@ -215,15 +160,13 @@ export default function Chat() {
 	}, [socketConnected]);
 
 	useEffect(() => {
-		// socket.connect();
-		// socket.on('CHAT_MESSAGE', pushChat);
+		socket.connect();
 
 		initializeChat();
-		// getChatMessages();
 
-		// return () => {
-		// 	socket.disconnect();
-		// };
+		return () => {
+			socket.disconnect();
+		};
 	}, []);
 
 	return (

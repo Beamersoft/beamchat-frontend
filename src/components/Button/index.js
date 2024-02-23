@@ -7,8 +7,6 @@ import {
 import Colors from '../../helpers/colors';
 import Text from '../Text';
 
-// import { track } from '../../helpers/analytics';
-
 import styles from './styles';
 
 function Button({
@@ -69,19 +67,6 @@ function Button({
 	);
 
 	function onPressHandle() {
-		// track('button-click', {
-		// 	label,
-		// 	testID,
-		// 	name,
-		// 	disabled,
-		// }, 'analytics');
-		// track(undefined, {
-		// 	label,
-		// 	testID,
-		// 	name: 'button',
-		// 	action: 'click',
-		// 	disabled,
-		// }, 'analytics');
 		if (onPress) onPress();
 	}
 

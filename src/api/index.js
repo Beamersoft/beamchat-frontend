@@ -63,33 +63,7 @@ export default async function api(params, useIdToken = false, version = '1', sav
 	const instance = axios.create(optionsAxios);
 	// const startTime = new Date();
 	try {
-		if (saveLog) {
-			// track('NETWORK_FETCH_INIT', {
-			// 	requestUUID,
-			// 	url: optionsAxios.url,
-			// 	method: optionsAxios.method,
-			// 	baseURL: optionsAxios.baseURL,
-			// 	headers: optionsAxios.headers,
-			// 	query: params.query,
-			// 	body: { ...params.data, password: null, nip: null },
-			// 	startTime,
-			// }, 'analytics');
-		}
-
 		const response = await instance.request(optionsAxios);
-		// const endTime = new Date();
-		if (saveLog) {
-			// track('NETWORK_FETCH_END', {
-			// 	requestUUID,
-			// 	response: response?.data,
-			// 	url: optionsAxios.url,
-			// 	method: optionsAxios.method,
-			// 	baseURL: optionsAxios.baseURL,
-			// 	status: response?.status,
-			// 	endTime,
-			// 	seconds: (endTime.getTime() - startTime.getTime()) / 1000,
-			// }, 'analytics');
-		}
 
 		if (response.data) {
 			try {
@@ -117,17 +91,6 @@ export default async function api(params, useIdToken = false, version = '1', sav
 			total401 = 0;
 		}
 
-		if (saveLog) {
-			// const endTime = new Date();
-			// track('NETWORK_ERROR', {
-			// 	requestUUID,
-			// 	errorData,
-			// 	url: optionsAxios.url,
-			// 	method: optionsAxios.method,
-			// 	baseURL: optionsAxios.baseURL,
-			// 	seconds: (endTime.getTime() - startTime.getTime()) / 1000,
-			// }, 'analytics');
-		}
 		throw new CustomError({
 			...errorData,
 		});

@@ -12,7 +12,6 @@ import ButtonSquareRegular from '../ButtonSquareRegular';
 import Text from '../../Text';
 
 import styles from './styles';
-import { track } from '../../../helpers/analytics';
 
 function ButtonRow({
 	label,
@@ -28,12 +27,6 @@ function ButtonRow({
 	const { t } = useTranslation();
 
 	function handlePress() {
-		track(undefined, {
-			label,
-			testID,
-			name: 'buttonRow',
-			action: 'click',
-		}, 'analytics');
 		if (onPress) onPress();
 	}
 

@@ -1,10 +1,6 @@
 import * as Location from 'expo-location';
 import Geolocation from 'react-native-geolocation-service';
 
-import {
-	track,
-} from '../helpers/analytics';
-
 function getLocationWrap() {
 	return new Promise((resolve, reject) => {
 		Geolocation.getCurrentPosition(
@@ -17,10 +13,7 @@ function getLocationWrap() {
 
 export async function getLocationAsync() {
 	try {
-		const { status } = await Location.requestForegroundPermissionsAsync();
-		track('location-services', {
-			status,
-		}, 'analytics');
+		await Location.requestForegroundPermissionsAsync();
 
 		const finalLocation = await getLocationWrap();
 		return finalLocation;
@@ -40,9 +33,6 @@ export async function getLocation() {
 		if (!location) {
 			console.info('sacando la ultima conocida');
 			location = await Location.getLastKnownPositionAsync();
-			track('location-services', {
-				location,
-			}, 'analytics');
 			console.info('obtenida la ultima conocida: ', location);
 		}
 		processGPS = false;

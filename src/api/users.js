@@ -4,7 +4,7 @@ export async function login(email = 'none@mail.com', password = 'password') {
 	try {
 		const response = await api({
 			host: 'http://10.0.2.2:3500', // beamer123$oft
-			microservice: 'core',
+			microservice: 'services',
 			module: 'users/login',
 			method: 'POST',
 			data: {

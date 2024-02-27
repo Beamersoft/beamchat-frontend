@@ -46,9 +46,7 @@ function Notifications() {
 		}
 	}
 
-	const handleReject = (id) => {
-
-	};
+	const handleReject = (id) => {};
 
 	// Function to render the status chip
 	const renderStatusChip = (status) => {

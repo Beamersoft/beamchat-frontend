@@ -58,6 +58,7 @@ export default async function api(params, useIdToken = false, version = '1', sav
 		headers: { ...finalHeaders },
 		signal: params?.controller?.signal || controller.signal,
 	};
+
 	if (params.data && Object.keys(params.data).length > 0) optionsAxios.data = params.data;
 
 	const instance = axios.create(optionsAxios);

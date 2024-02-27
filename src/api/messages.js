@@ -1,16 +1,17 @@
 import api from '.';
 
-export async function getMessages(userId = 'none', chatId = 'none', limit = 20, page = 0) {
+export async function getMessages(chatId = 'none', limit = 20, page = 0) {
 	try {
+		console.info('======> getMessages ', chatId, limit, page);
 		const response = await api({
-			host: 'http://10.0.2.2:3501',
+			host: 'http://10.0.2.2:3500',
+			microservice: 'services',
 			module: 'messages',
-			method: 'GET',
-			query: {
-				userId,
+			method: 'POST',
+			data: {
 				chatId,
 				limit,
-				skip: limit * page,
+				skip: (Number(limit) * Number(page)).toString(),
 			},
 		});
 

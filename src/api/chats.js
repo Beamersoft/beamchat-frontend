@@ -3,9 +3,10 @@ import api from '.';
 export async function getChats() {
 	try {
 		const response = await api({
-			host: 'http://10.0.2.2:3501',
+			host: 'http://10.0.2.2:3500',
+			microservice: 'services',
 			module: 'chats/all',
-			method: 'GET',
+			method: 'POST',
 		});
 
 		if (response.data) return response.data;
@@ -16,13 +17,15 @@ export async function getChats() {
 	}
 }
 
-export async function createChat(invitedEmail, pubKey) {
+export async function createChat(invitedEmail, pubKey, isPrivate = true) {
 	try {
 		const response = await api({
-			host: 'http://10.0.2.2:3501',
-			module: 'chats',
+			host: 'http://10.0.2.2:3500',
+			microservice: 'services',
+			module: 'chats/create',
 			method: 'POST',
 			data: {
+				isPrivate,
 				invitedEmail,
 				pubKey,
 			},
@@ -39,7 +42,8 @@ export async function createChat(invitedEmail, pubKey) {
 export async function acceptChatInvite(chatId, pubKey) {
 	try {
 		const response = await api({
-			host: 'http://10.0.2.2:3501',
+			host: 'http://10.0.2.2:3500',
+			microservice: 'services',
 			module: 'chats/accept',
 			method: 'POST',
 			data: {

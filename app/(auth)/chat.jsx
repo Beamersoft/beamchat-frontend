@@ -56,7 +56,7 @@ export default function Chat() {
 
 	async function getChatMessages(secretk, pag = 0) {
 		try {
-			const response = await getMessages(userData?._id, chatId, 20, pag);
+			const response = await getMessages(chatId, 20, pag);
 			if (response && Array.isArray(response) && response.length > 0) {
 				const promisesToDecrypt = response.map(async (msg) => {
 					const decryptedText = await decrypt({

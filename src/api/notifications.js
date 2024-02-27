@@ -3,7 +3,8 @@ import api from '.';
 export async function getNotifications() {
 	try {
 		const response = await api({
-			host: 'http://10.0.2.2:3501',
+			host: 'http://10.0.2.2:3500',
+			microservice: 'services',
 			module: 'notifications',
 			method: 'GET',
 		});

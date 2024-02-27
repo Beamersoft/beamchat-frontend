@@ -65,9 +65,9 @@ export default function Home() {
 	async function getAllNotifications() {
 		try {
 			const res = await getNotifications();
-
+			console.info('res?.notifications ', res?.notifications);
 			if (res?.notifications) {
-				setNotifications(res.notifications);
+				setNotifications(res?.notifications);
 			}
 			return null;
 		} catch (err) {

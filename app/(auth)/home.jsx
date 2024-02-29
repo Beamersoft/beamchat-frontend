@@ -6,6 +6,7 @@ import {
 
 import {
 	FlatList,
+	View,
 } from 'react-native';
 
 import {
@@ -13,16 +14,16 @@ import {
 	router,
 	useFocusEffect,
 } from 'expo-router';
-import { useTranslation } from 'react-i18next';
 
 import AuthContext from '../../src/providers/AuthContext';
 import Screen from '../../src/components/Screen';
-import Button from '../../src/components/Button';
-import { createChat, getChats } from '../../src/api/chats';
+import {
+	createChat,
+	getChats,
+} from '../../src/api/chats';
 import styles from './home.styles';
 import UserChat from '../../src/components/UserChat';
 import FloatingButton from '../../src/components/FloatingButton';
-import Text from '../../src/components/Text';
 import CreateChat from '../../src/main/home/CreateChat';
 import { generatePairOfKeys } from '../../src/helpers/crypto';
 import { secureStoreData } from '../../src/helpers/SecureStorageData';
@@ -30,7 +31,6 @@ import Badge from '../../src/components/Badge';
 import { getNotifications } from '../../src/api/notifications';
 
 export default function Home() {
-	const { t } = useTranslation();
 	const context = useContext(AuthContext);
 
 	const [chats, setChats] = useState();
@@ -41,7 +41,6 @@ export default function Home() {
 	const [notifications, setNotifications] = useState([]);
 
 	const {
-		logout,
 		userData,
 	} = context;
 
@@ -54,6 +53,7 @@ export default function Home() {
 			}
 
 			if (res?.users) {
+				console.info('users ', res.users);
 				setUsers(res.users);
 			}
 			return null;
@@ -77,7 +77,17 @@ export default function Home() {
 
 	function navigateToChat(chat) {
 		const { chatId, participants } = chat;
-		router.navigate({ pathname: 'chat', params: { chatId, participants: JSON.stringify(participants) } });
+
+		const participant = participants.find((p) => p.id !== userData?._id);
+
+		router.navigate({
+			pathname: 'chat',
+			params: {
+				chatId,
+				chatTitle: `${users[participant.id].firstName || 'John'} ${users[participant.id].lastName || 'Doe'}`,
+				participants: JSON.stringify(participants),
+			},
+		});
 	}
 
 	function onOpenChat() {
@@ -123,19 +133,29 @@ export default function Home() {
 		<Screen safe={false} style={styles.screen}>
 			<Stack.Screen
 				options={{
-					// eslint-disable-next-line react/no-unstable-nested-components
-					headerRight: () => (
-						<Badge
-							icon="envelope"
-							value={notifications.filter((notif) => notif.status === 'pending').length}
-							onPress={() => router.navigate({ pathname: 'notifications', params: { notifications: JSON.stringify(notifications) } })}
-						/>
-					),
+					headerShown: false,
 				}}
 			/>
-			<Text style={styles.welcomeMessage}>
-				{`Hi ${userData?.firstName || ''}! Below you see your chats:`}
-			</Text>
+			<View style={styles.header} />
+			<View style={styles.userSection}>
+				<Badge
+					style={styles.badgeStyle}
+					icon="user"
+					color="#848484"
+					value={notifications.filter((notif) => notif.status === 'pending').length}
+					onPress={() => router.navigate({ pathname: 'profile' })}
+				/>
+				<Badge
+					style={styles.badgeStyle}
+					icon="envelope"
+					color="#848484"
+					value={notifications.filter((notif) => notif.status === 'pending').length}
+					onPress={() => router.navigate({ pathname: 'notifications', params: { notifications: JSON.stringify(notifications) } })}
+				/>
+				{/* <TouchableOpacity onPress={() => logout()} style={styles.logoutButton}>
+					<Text style={{ color: '#FFF' }}>Logout</Text>
+				</TouchableOpacity> */}
+			</View>
 			{(chats && users) ? (
 				<FlatList
 					data={chats}
@@ -151,11 +171,6 @@ export default function Home() {
 					contentContainerStyle={styles.chatList}
 				/>
 			) : null}
-			<Button
-				label={`${t('LOGOUT')}`}
-				onPress={() => logout()}
-				style={styles.logoutButton}
-			/>
 			<FloatingButton
 				onPress={() => onOpenChat()}
 			/>

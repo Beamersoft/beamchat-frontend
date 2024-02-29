@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import {
+	Stack,
 	useLocalSearchParams,
 } from 'expo-router';
 
@@ -49,6 +50,7 @@ export default function Chat() {
 
 	const {
 		chatId,
+		chatTitle,
 		participants,
 	} = useLocalSearchParams();
 
@@ -124,9 +126,9 @@ export default function Chat() {
 				return;
 			}
 
-			// El chat contiene otro participante y tiene una clave pública entonces se puede iniciar el chat.
 			const participantsOnChat = JSON.parse(participants);
 			const otherPartyIdx = participantsOnChat.findIndex((p) => p.id !== userData?._id);
+
 			const otherPartyPublicKey = participantsOnChat[otherPartyIdx]?.pubKey;
 
 			if (otherPartyIdx === -1 || !otherPartyPublicKey) {
@@ -176,6 +178,11 @@ export default function Chat() {
 
 	return (
 		<Screen safe={false} style={styles.screen}>
+			<Stack.Screen
+				options={{
+					title: chatTitle || '',
+				}}
+			/>
 			<FlashList
 				data={messages}
 				keyExtractor={keyExtractor}
@@ -197,10 +204,12 @@ export default function Chat() {
 					value={message}
 					onChangeText={setMessage}
 					placeholder="Type a message..."
+					withLine={false}
 				/>
 				<Button
 					widthContent="15%"
 					label="Send"
+					color="white"
 					onPress={() => emitMessage()}
 					style={styles.sendButton}
 				/>

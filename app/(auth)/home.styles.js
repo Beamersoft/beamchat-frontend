@@ -1,47 +1,50 @@
 import { StyleSheet } from 'react-native';
+import Colors from '../../src/themes/colors';
 
 const styles = StyleSheet.create({
 	screen: {
 		flex: 1,
-		padding: 20, // Provides padding around the entire screen content
-		backgroundColor: '#F5F5F5', // A light grey background
+		backgroundColor: '#F5F5F5', // Light background for the entire screen
 	},
-	headerTitle: {
+	header: {
+		padding: 20,
+		backgroundColor: Colors.primary.blue30, // Consider using your app's primary color
+		color: '#FFFFFF',
+		fontSize: 24,
 		fontWeight: 'bold',
+		textAlign: 'center',
 	},
-	welcomeMessage: {
-		marginBottom: 20,
-		fontSize: 20,
-		fontWeight: 'normal',
-		color: '#333', // Darker text for better readability
+	userSection: {
+		flexDirection: 'row', // Aligns items in a row
+		alignItems: 'center', // Centers items vertically in the container
+		justifyContent: 'space-between',
+		marginBottom: 20, // Adds some space below the user section
+		padding: 10, // Adds padding inside the user section
 	},
-	chatItem: {
-		backgroundColor: '#FFF', // White background for chat items
-		padding: 15,
-		borderRadius: 5,
-		marginBottom: 10,
-		shadowColor: '#000',
-		shadowOffset: {
-			width: 0,
-			height: 2,
-		},
-		shadowOpacity: 0.1,
-		shadowRadius: 3.84,
-		elevation: 5, // Adds shadow for elevation effect
-	},
-	chatItemText: {
-		color: '#0078D4', // MSN's iconic blue for interactive elements
-	},
-	chatList: {
-		flexGrow: 1,
+	userProfilePic: {
+		width: 40,
+		height: 40,
+		borderRadius: 20, // Circular profile picture
+		marginRight: 10,
 	},
 	logoutButton: {
-		marginTop: 'auto', // Pushes the logout button to the bottom of the screen
 		backgroundColor: '#0078D4', // MSN blue for the button
 		color: '#FFFFFF', // White text
 		padding: 10,
 		borderRadius: 5,
+		marginRight: 10, // Adds spacing between the logout button and the badge/notification icon
 	},
+	badgeStyle: {
+		// Example style, adjust as needed for your Badge component
+		padding: 10,
+		borderRadius: 5,
+		backgroundColor: '#0078D4', // You might want to match this with your app's theme
+	},
+	content: {
+		padding: 20,
+		// Styles for the main content go here
+	},
+	// Add any other styles for buttons, text, etc, that are part of your home page
 });
 
 export default styles;

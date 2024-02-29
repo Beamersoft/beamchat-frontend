@@ -22,7 +22,6 @@ import socket from '../../src/api/socket';
 import AuthContext from '../../src/providers/AuthContext';
 import Screen from '../../src/components/Screen';
 import Button from '../../src/components/Button';
-import Text from '../../src/components/Text';
 import InputText from '../../src/components/InputText';
 import { getMessages } from '../../src/api/messages';
 import {
@@ -32,6 +31,7 @@ import {
 } from '../../src/helpers/crypto';
 import styles from './chat.styles';
 import { secureGetData } from '../../src/helpers/SecureStorageData';
+import ChatMessage from '../../src/components/ChatMessage';
 
 export default function Chat() {
 	const context = useContext(AuthContext);
@@ -105,7 +105,12 @@ export default function Chat() {
 				content: msg.message,
 			}, secretKey);
 
-			setMessages((prev) => [{ _id: Math.random(), text: decryptedMessage || 'Encrypted data' }, ...prev]);
+			setMessages((prev) => [{
+				_id: Math.random(),
+				text: decryptedMessage || 'Encrypted data',
+				senderId: msg.userId,
+			},
+			...prev]);
 		}
 	}
 
@@ -175,13 +180,10 @@ export default function Chat() {
 				data={messages}
 				keyExtractor={keyExtractor}
 				renderItem={({ item }) => (
-					<View style={[
-						styles.messageBubble,
-						item.userId === userData?._id ? styles.myMessage : styles.theirMessage,
-					]}
-					>
-						<Text style={styles.messageText}>{item.text}</Text>
-					</View>
+					<ChatMessage
+						isOwnMessage={item.senderId === userData?._id}
+						message={item}
+					/>
 				)}
 				showsVerticalScrollIndicator={false}
 				inverted

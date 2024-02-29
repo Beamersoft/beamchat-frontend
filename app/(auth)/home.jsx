@@ -1,7 +1,7 @@
 import {
 	useContext,
 	useState,
-	useEffect,
+	useCallback,
 } from 'react';
 
 import {
@@ -11,6 +11,7 @@ import {
 import {
 	Stack,
 	router,
+	useFocusEffect,
 } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
@@ -111,10 +112,12 @@ export default function Home() {
 		}
 	}
 
-	useEffect(() => {
-		getAllChats();
-		getAllNotifications();
-	}, []);
+	useFocusEffect(
+		useCallback(() => {
+			getAllChats();
+			getAllNotifications();
+		}, []),
+	);
 
 	return (
 		<Screen safe={false} style={styles.screen}>

@@ -6,7 +6,7 @@ export async function getNotifications() {
 			host: 'http://10.0.2.2:3500',
 			microservice: 'services',
 			module: 'notifications',
-			method: 'GET',
+			method: 'POST',
 		});
 
 		if (response.data) return response.data;

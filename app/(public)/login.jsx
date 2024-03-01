@@ -1,8 +1,12 @@
 import {
+	useContext,
+	useEffect,
+	useState,
+} from 'react';
+import {
 	Link,
 	Stack,
 } from 'expo-router';
-import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AuthContext from '../../src/providers/AuthContext';
@@ -11,6 +15,8 @@ import InputText from '../../src/components/InputText';
 import { login } from '../../src/api/users';
 import { storeData } from '../../src/helpers/StorageData';
 import Button from '../../src/components/Button';
+import Text from '../../src/components/Text';
+import styles from './login.styles';
 
 export default function Login() {
 	const { t } = useTranslation();
@@ -65,13 +71,19 @@ export default function Login() {
 			<InputText
 				placeholder={`${t('EMAIL')}`}
 				onChangeText={(txt) => setEmail(txt)}
+				style={styles.input}
+				withLine={false}
 			/>
 			<InputText
 				password
 				placeholder={`${t('PASSWORD')}`}
 				onChangeText={(txt) => setPassword(txt)}
+				withLine={false}
+				style={styles.input}
 			/>
-			<Link href={{ pathname: 'register' }}>{`${t('REGISTER_HINT')}`}</Link>
+			<Link href={{ pathname: 'register' }} style={styles.link}>
+				<Text style={styles.linkText}>{`${t('REGISTER_HINT')}`}</Text>
+			</Link>
 			<Button
 				label={`${t('CONTINUE')}`}
 				color="white10"

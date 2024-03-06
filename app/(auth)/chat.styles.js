@@ -10,10 +10,10 @@ const styles = StyleSheet.create({
 	inputContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		padding: 8, // Added padding for the container
-		backgroundColor: '#FFF', // Optional: Change as per your app's theme
-		borderRadius: 25, // Rounded corners for the container
-		shadowColor: '#000', // Shadow for the container
+		padding: 8,
+		backgroundColor: '#FFF',
+		borderRadius: 25,
+		shadowColor: '#000',
 		shadowOffset: {
 			width: 0,
 			height: 2,
@@ -25,18 +25,16 @@ const styles = StyleSheet.create({
 	},
 	input: {
 		width: '82%',
-		padding: 1, // Added padding inside the input
-		borderRadius: 25, // Rounded corners for the input field
-		backgroundColor: '#F0F0F0', // Light background color for the input field
-		marginRight: 8, // Added margin to separate input and button
+		padding: 1,
+		borderRadius: 25,
+		backgroundColor: '#F0F0F0',
+		marginRight: 8,
 	},
 	sendButton: {
-		backgroundColor: '#0078D4', // A more vibrant color
-		borderRadius: 25, // Fully rounded corners
-		paddingVertical: 10, // Vertical padding
-		paddingHorizontal: 10, // Horizontal padding
-		elevation: 2, // Shadow effect
-		shadowColor: '#000', // Shadow color
+		backgroundColor: '#0078D4',
+		borderRadius: 25,
+		elevation: 2,
+		shadowColor: '#000',
 		shadowOffset: {
 			width: 0,
 			height: 2,

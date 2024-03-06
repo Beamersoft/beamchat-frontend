@@ -34,6 +34,9 @@ const styles = StyleSheet.create({
 		color: '#0078D4',
 		textDecorationLine: 'underline',
 	},
+	error: {
+		marginVertical: 10,
+	},
 });
 
 export default styles;

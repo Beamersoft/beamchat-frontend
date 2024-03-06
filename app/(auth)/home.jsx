@@ -29,6 +29,7 @@ import { generatePairOfKeys } from '../../src/helpers/crypto';
 import { secureStoreData } from '../../src/helpers/SecureStorageData';
 import Badge from '../../src/components/Badge';
 import { getNotifications } from '../../src/api/notifications';
+import Text from '../../src/components/Text';
 
 export default function Home() {
 	const context = useContext(AuthContext);
@@ -152,11 +153,8 @@ export default function Home() {
 					value={notifications.filter((notif) => notif.status === 'pending').length}
 					onPress={() => router.navigate({ pathname: 'notifications', params: { notifications: JSON.stringify(notifications) } })}
 				/>
-				{/* <TouchableOpacity onPress={() => logout()} style={styles.logoutButton}>
-					<Text style={{ color: '#FFF' }}>Logout</Text>
-				</TouchableOpacity> */}
 			</View>
-			{(chats && users) ? (
+			{(chats && chats.length > 0 && users) ? (
 				<FlatList
 					data={chats}
 					keyExtractor={(item) => item.chatId}
@@ -170,6 +168,14 @@ export default function Home() {
 					)}
 					contentContainerStyle={styles.chatList}
 				/>
+			) : null}
+			{chats && chats.length === 0 ? (
+				<Text
+					size="regular-18"
+					center
+				>
+					There are not chats to show
+				</Text>
 			) : null}
 			<FloatingButton
 				onPress={() => onOpenChat()}

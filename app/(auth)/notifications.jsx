@@ -48,7 +48,6 @@ function Notifications() {
 
 	const handleReject = (id) => {};
 
-	// Function to render the status chip
 	const renderStatusChip = (status) => {
 		let backgroundColor = '#FFC107';
 		if (status === 'accepted') backgroundColor = '#4CAF50';

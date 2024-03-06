@@ -4,6 +4,35 @@
 
 Beamchat is a cutting-edge chat application built with React Native, designed for secure and efficient communication. It leverages end-to-end encryption using the Elliptic Curve Diffie-Hellman (ECDH) algorithm for generating a shared secret, ensuring that your messages remain private and secure.
 
+#
+
+- [Roadmap](#roadmap)
+- [Features](#features)
+- [Example](#example)
+- [Backend](#backend)
+- [Getting Started](#getting-started)
+	- [Prerequisites](#prerequisites)
+	- [Installation](#installation)
+
+
+## Roadmap
+
+The development of this app is an ongoing journey, and while we've achieved significant milestones, our roadmap continues to guide us towards a more robust and feature-rich application.
+
+- [x] Implement basic chat functionality with Socket.io for real-time messaging.
+- [x] Message caching in the database, with fast retrieval through pagination for an efficient chat history experience.
+- [x] End-to-end encryption using the secure Diffie-Hellman Elliptic Curve algorithm to ensure private conversations.
+- [x] Basic user authentication flow for login and registration to establish user identity.
+- [x] Basic notification system that informs users of new chat invitations for prompt communication.
+- [x] Feature to accept chat invitations, allowing users to join conversations seamlessly.
+- [ ] Functionality to reject chat invitations, giving users control over their chat engagement.
+- [ ] Implement a ChatBOT integrated with a custom Large Language Model (LLM) for interactive conversations.
+- [ ] Enhance secure end-to-end encryption logic to store data locally, akin to Signal and WhatsApp's security models.
+- [ ] Password recovery system to assist users in regaining access to their accounts.
+- [ ] Avatar and file update system to enable personalization and file sharing within chats.
+- [ ] Single Sign-On (SSO) capabilities to allow users to access the chat with various identity providers.
+- [ ] Push notifications to keep users informed of new messages and chat activities, even when they are not actively using the app.
+
 ## Features
 
 - **Real-time messaging**: Instantly send and receive messages with Socket.IO.

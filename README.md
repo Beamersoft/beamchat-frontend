@@ -42,8 +42,8 @@ Socket.io backend, needed for the chat logic: [beamchat-socket](https://github.c
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/<your-username>/<repository-url>.git
-cd <repository-name>
+git clone https://github.com/Beamersoft/beamchat-frontend.git
+cd beamchat-frontend
 ```
 
 2. Install dependencies:

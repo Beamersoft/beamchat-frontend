@@ -15,7 +15,7 @@ function Badge({
 	size = 30,
 	color = '#FFF',
 	badgeColor = '#FF2D2D',
-	value = 1,
+	value = 0,
 }) {
 	const badgeSize = value > 9 ? 20 : 16;
 	const fontSize = value > 9 ? 12 : 10;

@@ -143,7 +143,6 @@ export default function Home() {
 					style={styles.badgeStyle}
 					icon="user"
 					color="#848484"
-					value={notifications.filter((notif) => notif.status === 'pending').length}
 					onPress={() => router.navigate({ pathname: 'profile' })}
 				/>
 				<Badge

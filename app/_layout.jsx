@@ -18,6 +18,8 @@ import {
 } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 
+import i18n from '../src/i18n';
+
 import AuthProviderContext from '../src/providers/AuthProvider';
 import AuthContext from '../src/providers/AuthContext';
 

@@ -46,7 +46,9 @@ function Notifications() {
 		}
 	}
 
-	const handleReject = (id) => {};
+	const handleReject = (id) => {
+		// TODO: implement rejection
+	};
 
 	const renderStatusChip = (status) => {
 		let backgroundColor = '#FFC107';

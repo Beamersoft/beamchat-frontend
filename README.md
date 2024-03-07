@@ -27,6 +27,7 @@ The development of this app is an ongoing journey, and while we've achieved sign
 - [x] Feature to accept chat invitations, allowing users to join conversations seamlessly.
 - [ ] Functionality to reject chat invitations, giving users control over their chat engagement.
 - [ ] Implement a ChatBOT integrated with a custom Large Language Model (LLM) for interactive conversations.
+- [ ] Implement React Native WebRTC for Video Streaming.
 - [ ] Enhance secure end-to-end encryption logic to store data locally, akin to Signal and WhatsApp's security models.
 - [ ] Password recovery system to assist users in regaining access to their accounts.
 - [ ] Avatar and file update system to enable personalization and file sharing within chats.
